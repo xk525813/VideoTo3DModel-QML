@@ -63,6 +63,8 @@ Rectangle {
         title: "环境依赖检查"
         modal: true
         standardButtons: Dialog.Ok
+        implicitWidth: 420
+        implicitHeight: 300
         Label {
             text: depDialog.message
             color: "#cdd6f4"

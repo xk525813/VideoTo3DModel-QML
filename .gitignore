@@ -8,3 +8,8 @@ ui_*
 qrc_*
 *~
 .DS_Store
+CMakeUserPresets.json
+.idea/
+.vscode/
+*.user
+*.pro.user

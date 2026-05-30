@@ -4,6 +4,7 @@
         <file>ImportPanel.qml</file>
         <file>SettingsPanel.qml</file>
         <file>ProgressPanel.qml</file>
+        <file>PreviewPanel.qml</file>
         <file>ExportPanel.qml</file>
     </qresource>
 </RCC>

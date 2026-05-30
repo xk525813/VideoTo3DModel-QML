@@ -72,21 +72,9 @@ ApplicationWindow {
             Layout.fillHeight: true
             spacing: 8
 
-            // 预览占位 (Task 15 替换)
-            Rectangle {
+            PreviewPanel {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: "#11111b"
-                border.color: "#313244"
-                border.width: 1
-                radius: 8
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "3D 模型预览区域"
-                    color: "#585b70"
-                    font.pixelSize: 14
-                }
             }
 
             ProgressPanel {

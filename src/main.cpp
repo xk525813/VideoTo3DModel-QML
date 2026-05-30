@@ -1,10 +1,12 @@
 // /Share/GenerateModel/src/main.cpp
-#include <QGuiApplication>
 #include "app/Application.h"
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     Application app(argc, argv);
+
+    if (!app.shouldContinue())
+        return 0;
+
     return app.exec();
 }

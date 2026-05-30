@@ -1,5 +1,6 @@
 set(SOURCES
     main.cpp
+    app/Application.cpp
     core/ProjectManager.cpp
     core/HardwareDetector.cpp
     core/FrameExtractor.cpp

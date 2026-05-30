@@ -10,7 +10,7 @@ ApplicationWindow {
     width: 1280
     height: 800
     title: "VideoTo3D"
-    color: "#1e1e2e"
+    color: "#F0F4F8"
 
     PipelineBridge {
         id: bridge
@@ -30,13 +30,13 @@ ApplicationWindow {
     // 状态栏
     footer: Rectangle {
         height: 32
-        color: "#181825"
+        color: "#E2E8F0"
         RowLayout {
             anchors.fill: parent
             anchors.margins: 4
             Text {
                 text: "状态: " + bridge.pipelineState
-                color: "#cdd6f4"
+                color: "#334155"
                 font.pixelSize: 12
             }
             Item { Layout.fillWidth: true }
@@ -44,7 +44,7 @@ ApplicationWindow {
                 text: "GPU: " + (bridge.hardwareProfile.hasGPU
                        ? bridge.hardwareProfile.gpuName
                        : "未检测到")
-                color: bridge.hardwareProfile.hasGPU ? "#a6e3a1" : "#f38ba8"
+                color: bridge.hardwareProfile.hasGPU ? "#059669" : "#DC2626"
                 font.pixelSize: 12
             }
         }
@@ -53,24 +53,24 @@ ApplicationWindow {
     // 主布局
     RowLayout {
         anchors.fill: parent
-        anchors.margins: 8
-        spacing: 8
+        anchors.margins: 12
+        spacing: 12
 
         // 左侧: 导入 + 设置
         ColumnLayout {
             Layout.preferredWidth: 280
             Layout.fillHeight: true
-            spacing: 8
+            spacing: 10
 
             ImportPanel { id: importPanel; bridge: bridge }
             SettingsPanel { id: settingsPanel; bridge: bridge }
         }
 
-        // 中央: 进度面板
+        // 中央: 预览 + 进度
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 8
+            spacing: 10
 
             PreviewPanel {
                 Layout.fillWidth: true
@@ -79,7 +79,7 @@ ApplicationWindow {
 
             ProgressPanel {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 120
+                Layout.preferredHeight: 130
                 bridge: bridge
             }
         }
@@ -100,10 +100,11 @@ ApplicationWindow {
         title: errorDialog.dialogTitle
         modal: true
         standardButtons: Dialog.Ok
+        implicitWidth: 420
         Label {
             text: errorDialog.dialogMessage
             wrapMode: Text.Wrap
-            color: "#cdd6f4"
+            color: "#1E293B"
         }
     }
 
@@ -115,10 +116,11 @@ ApplicationWindow {
         title: finishDialog.success ? "完成" : "失败"
         modal: true
         standardButtons: Dialog.Ok
+        implicitWidth: 380
         Label {
             text: finishDialog.dialogMessage
             wrapMode: Text.Wrap
-            color: "#cdd6f4"
+            color: "#1E293B"
         }
     }
 }

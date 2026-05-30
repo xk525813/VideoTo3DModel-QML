@@ -4,30 +4,31 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-    color: "#1e1e2e"
-    border.color: "#313244"
+    color: "#FFFFFF"
+    border.color: "#E2E8F0"
     border.width: 1
-    radius: 8
+    radius: 10
 
     property var bridge: null
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 12
-        spacing: 4
+        spacing: 6
 
         RowLayout {
             Text {
                 text: "进度"
-                color: "#cdd6f4"
-                font.pixelSize: 14
+                color: "#1E293B"
+                font.pixelSize: 15
                 font.weight: Font.Bold
             }
             Item { Layout.fillWidth: true }
             Text {
                 text: bridge ? bridge.currentStage : ""
-                color: "#a6e3a1"
+                color: "#6366F1"
                 font.pixelSize: 12
+                font.weight: Font.Medium
             }
         }
 
@@ -38,12 +39,12 @@ Rectangle {
             value: bridge ? bridge.stageProgress : 0
             background: Rectangle {
                 implicitHeight: 8
-                color: "#313244"
+                color: "#E2E8F0"
                 radius: 4
             }
             contentItem: Rectangle {
                 implicitHeight: 8
-                color: "#89b4fa"
+                color: "#6366F1"
                 radius: 4
                 width: parent.visualPosition * parent.width
             }
@@ -51,7 +52,7 @@ Rectangle {
 
         Text {
             text: bridge ? bridge.stageStatus : ""
-            color: "#a6adc8"
+            color: "#64748B"
             font.pixelSize: 12
             wrapMode: Text.Wrap
         }
@@ -59,26 +60,28 @@ Rectangle {
         Text {
             visible: bridge ? bridge.stageEta > 0 : false
             text: "预计剩余: " + Math.ceil((bridge && bridge.stageEta ? bridge.stageEta : 0) / 60) + " 分钟"
-            color: "#f9e2af"
+            color: "#F59E0B"
             font.pixelSize: 11
         }
 
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#11111b"
-            radius: 4
+            color: "#F8FAFC"
+            border.color: "#E2E8F0"
+            radius: 6
 
             ListView {
                 id: logView
                 anchors.fill: parent
-                anchors.margins: 4
+                anchors.margins: 6
                 model: logModel
                 delegate: Text {
                     text: modelData
-                    color: "#a6adc8"
+                    color: "#475569"
                     font.pixelSize: 11
                     wrapMode: Text.Wrap
+                    font.family: "monospace"
                 }
 
                 property ListModel logModel: ListModel {}

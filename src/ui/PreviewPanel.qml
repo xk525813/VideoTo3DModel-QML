@@ -4,10 +4,10 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-    color: "#11111b"
-    border.color: "#313244"
+    color: "#FFFFFF"
+    border.color: "#E2E8F0"
     border.width: 1
-    radius: 8
+    radius: 10
 
     ColumnLayout {
         anchors.centerIn: parent
@@ -15,31 +15,31 @@ Rectangle {
 
         Text {
             text: "3D 预览"
-            color: "#6c7086"
+            color: "#94A3B8"
             font.pixelSize: 20
+            font.weight: Font.Bold
             Layout.alignment: Qt.AlignHCenter
         }
         Text {
             text: "处理完成后将在此处显示模型预览"
-            color: "#585b70"
+            color: "#CBD5E1"
             font.pixelSize: 13
             Layout.alignment: Qt.AlignHCenter
         }
 
-        // OpenGL 预览区域 — 阶段1占位
         Rectangle {
             width: 300
             height: 200
-            color: "#181825"
-            border.color: "#313244"
+            color: "#F1F5F9"
+            border.color: "#E2E8F0"
             border.width: 1
-            radius: 4
+            radius: 8
             Layout.alignment: Qt.AlignHCenter
 
             Text {
                 anchors.centerIn: parent
                 text: "预览区域"
-                color: "#45475a"
+                color: "#CBD5E1"
                 font.pixelSize: 14
             }
         }

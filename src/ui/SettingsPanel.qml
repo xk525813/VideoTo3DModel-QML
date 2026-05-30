@@ -4,37 +4,38 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
-    color: "#1e1e2e"
-    border.color: "#313244"
+    color: "#FFFFFF"
+    border.color: "#E2E8F0"
     border.width: 1
-    radius: 8
+    radius: 10
 
     property var bridge: null
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 12
-        spacing: 8
+        anchors.margins: 14
+        spacing: 10
 
         Text {
             text: "设置"
-            color: "#cdd6f4"
-            font.pixelSize: 16
+            color: "#1E293B"
+            font.pixelSize: 17
             font.weight: Font.Bold
         }
 
         // GPU 开关
         RowLayout {
-            Text { text: "GPU 加速"; color: "#cdd6f4"; Layout.fillWidth: true }
+            Text { text: "GPU 加速"; color: "#334155"; Layout.fillWidth: true; font.pixelSize: 13 }
             Switch {
                 id: gpuSwitch
                 checked: true
                 enabled: bridge ? bridge.hardwareProfile.hasGPU : false
+                palette.mid: "#6366F1"
             }
         }
 
         // 质量档位
-        Text { text: "重建质量"; color: "#cdd6f4" }
+        Text { text: "重建质量"; color: "#334155"; font.pixelSize: 13 }
         ComboBox {
             id: qualityCombo
             Layout.fillWidth: true
@@ -49,7 +50,7 @@ Rectangle {
         }
 
         // 导出格式
-        Text { text: "导出格式"; color: "#cdd6f4" }
+        Text { text: "导出格式"; color: "#334155"; font.pixelSize: 13 }
         ComboBox {
             id: formatCombo
             Layout.fillWidth: true
@@ -63,16 +64,18 @@ Rectangle {
         }
 
         // 输出目录
-        Text { text: "输出目录"; color: "#cdd6f4" }
+        Text { text: "输出目录"; color: "#334155"; font.pixelSize: 13 }
         TextField {
             id: outputDirField
             Layout.fillWidth: true
             text: ""
             placeholderText: "默认: ~/VideoTo3D_Projects"
-            color: "#cdd6f4"
+            color: "#1E293B"
+            placeholderTextColor: "#94A3B8"
             background: Rectangle {
-                color: "#313244"
-                radius: 4
+                color: "#F1F5F9"
+                radius: 6
+                border.color: "#CBD5E1"
             }
         }
     }

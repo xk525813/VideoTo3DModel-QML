@@ -5,22 +5,22 @@ import QtQuick.Dialogs
 
 Rectangle {
     id: root
-    color: "#1e1e2e"
-    border.color: "#313244"
+    color: "#FFFFFF"
+    border.color: "#E2E8F0"
     border.width: 1
-    radius: 8
+    radius: 10
 
     property var bridge: null
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 12
-        spacing: 8
+        anchors.margins: 14
+        spacing: 10
 
         Text {
             text: "导入"
-            color: "#cdd6f4"
-            font.pixelSize: 16
+            color: "#1E293B"
+            font.pixelSize: 17
             font.weight: Font.Bold
         }
 
@@ -28,9 +28,9 @@ Rectangle {
             id: dropArea
             Layout.fillWidth: true
             Layout.preferredHeight: 100
-            color: "#181825"
-            border.color: dragHandler.containsDrag ? "#89b4fa" : "#45475a"
-            border.width: dragHandler.containsDrag ? 3 : 2
+            color: dragHandler.containsDrag ? "#EEF2FF" : "#F8FAFC"
+            border.color: dragHandler.containsDrag ? "#6366F1" : "#CBD5E1"
+            border.width: dragHandler.containsDrag ? 2 : 1
             radius: 8
 
             DropArea {
@@ -51,7 +51,7 @@ Rectangle {
                     text: selectedFileLabel.visible
                           ? selectedFileLabel.text.split("/").pop()
                           : "拖放视频文件到此处"
-                    color: selectedFileLabel.visible ? "#a6e3a1" : "#6c7086"
+                    color: selectedFileLabel.visible ? "#059669" : "#94A3B8"
                     font.pixelSize: 13
                     elide: Text.ElideMiddle
                     width: parent.width - 16
@@ -68,6 +68,16 @@ Rectangle {
         Button {
             text: "选择文件..."
             Layout.fillWidth: true
+            background: Rectangle {
+                color: "#6366F1"
+                radius: 6
+            }
+            contentItem: Text {
+                text: parent.text
+                color: "#FFFFFF"
+                font.weight: Font.Medium
+                horizontalAlignment: Text.AlignHCenter
+            }
             onClicked: fileDialog.open()
         }
 
@@ -89,11 +99,19 @@ Rectangle {
         Button {
             text: bridge && bridge.pipelineState === "running" ? "处理中..." : "开始重建"
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
+            Layout.preferredHeight: 42
             enabled: bridge && bridge.pipelineState !== "running" && selectedFileLabel.visible
-            palette.button: "#89b4fa"
-            palette.buttonText: "#1e1e2e"
-
+            background: Rectangle {
+                color: parent.enabled ? "#10B981" : "#CBD5E1"
+                radius: 8
+            }
+            contentItem: Text {
+                text: parent.text
+                color: parent.enabled ? "#FFFFFF" : "#94A3B8"
+                font.weight: Font.Bold
+                font.pixelSize: 14
+                horizontalAlignment: Text.AlignHCenter
+            }
             onClicked: {
                 if (bridge && selectedFileLabel.visible) {
                     let settings = {

@@ -50,34 +50,44 @@ ApplicationWindow {
         }
     }
 
-    // 主布局 — 占位: 后续任务替换为实际面板
-    Rectangle {
+    // 主布局
+    RowLayout {
         anchors.fill: parent
-        anchors.margins: 16
-        color: "transparent"
+        anchors.margins: 8
+        spacing: 8
 
+        // 左侧: 导入 + 设置
         ColumnLayout {
-            anchors.centerIn: parent
-            spacing: 12
+            Layout.preferredWidth: 280
+            Layout.fillHeight: true
+            spacing: 8
 
-            Text {
-                text: "VideoTo3D"
-                color: "#cdd6f4"
-                font.pixelSize: 28
-                font.weight: Font.Bold
-                Layout.alignment: Qt.AlignHCenter
-            }
-            Text {
-                text: "视频转 3D 模型工具 v" + _appVersion
-                color: "#6c7086"
-                font.pixelSize: 14
-                Layout.alignment: Qt.AlignHCenter
-            }
-            Text {
-                text: bridge.pipelineState === "idle" ? "就绪 — 拖放视频开始" : bridge.pipelineState
-                color: "#a6adc8"
-                font.pixelSize: 13
-                Layout.alignment: Qt.AlignHCenter
+            ImportPanel { id: importPanel; bridge: bridge }
+            SettingsPanel { id: settingsPanel; bridge: bridge }
+        }
+
+        // 中央: 占位 (后续任务替换为预览+进度)
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: "transparent"
+
+            ColumnLayout {
+                anchors.centerIn: parent
+                spacing: 12
+                Text {
+                    text: "VideoTo3D"
+                    color: "#cdd6f4"
+                    font.pixelSize: 28
+                    font.weight: Font.Bold
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                Text {
+                    text: "视频转 3D 模型工具"
+                    color: "#6c7086"
+                    font.pixelSize: 14
+                    Layout.alignment: Qt.AlignHCenter
+                }
             }
         }
     }

@@ -167,7 +167,8 @@ void PipelineBridge::onStageStarted(const QString& name) {
 }
 
 void PipelineBridge::onStageCompleted(const QString& name) {
-    LogManager::debug("阶段完成信号: {}", name.toStdString());
+    LogManager::debug(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                      "阶段完成: {}", name.toStdString());
 }
 
 void PipelineBridge::onStageFailed(const QString& name, const QString& error) {

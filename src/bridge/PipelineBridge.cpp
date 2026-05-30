@@ -6,8 +6,8 @@
 #include "../core/TextureStage.h"
 #include "../core/ExportManager.h"
 #include "../core/ProjectManager.h"
+#include "../core/LogManager.h"
 #include <QProcess>
-#include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QDateTime>
@@ -167,7 +167,7 @@ void PipelineBridge::onStageStarted(const QString& name) {
 }
 
 void PipelineBridge::onStageCompleted(const QString& name) {
-    qDebug() << "Stage completed:" << name;
+    LogManager::debug("阶段完成信号: {}", name.toStdString());
 }
 
 void PipelineBridge::onStageFailed(const QString& name, const QString& error) {

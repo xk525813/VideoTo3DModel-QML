@@ -1,6 +1,6 @@
 // /Share/GenerateModel/src/core/PipelineOrchestrator.cpp
 #include "PipelineOrchestrator.h"
-#include <QDebug>
+#include "LogManager.h"
 #include <QThread>
 
 PipelineOrchestrator::PipelineOrchestrator(QObject* parent)
@@ -38,15 +38,19 @@ void PipelineOrchestrator::run(const QString& projectDir,
 
         // 断点续传: 跳过已完成的阶段
         if (ProjectManager::isStageComplete(projectDir, stageName)) {
-            qDebug() << "Skipping completed stage:" << stageName;
+            LogManager::debug("跳过已完成阶段: {}", stageName.toStdString());
             continue;
         }
 
+        LogManager::info("▶ 阶段开始: {}", stageName.toStdString());
         emit stageStarted(stageName);
 
         StageResult result = stage->execute(projectDir, config);
 
         if (!result.ok) {
+            LogManager::error("✘ 阶段失败: {} — {}",
+                              stageName.toStdString(),
+                              result.errorMessage.toStdString());
             emit stageFailed(stageName, result.errorMessage);
             setState(PipelineState::Failed);
             emit pipelineFinished(false, result.errorMessage);
@@ -55,6 +59,7 @@ void PipelineOrchestrator::run(const QString& projectDir,
 
         // 标记完成
         ProjectManager::markStageComplete(projectDir, stageName, true);
+        LogManager::info("✔ 阶段完成: {}", stageName.toStdString());
         emit stageCompleted(stageName);
     }
 

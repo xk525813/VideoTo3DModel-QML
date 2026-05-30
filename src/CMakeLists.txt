@@ -9,11 +9,13 @@ set(SOURCES
     core/TextureStage.cpp
     core/PipelineOrchestrator.cpp
     core/ExportManager.cpp
+    core/LogManager.cpp
     bridge/PipelineBridge.cpp
 )
 
 set(HEADERS
     core/IStage.h
+    core/LogManager.h
     core/ProjectManager.h
     core/HardwareDetector.h
     core/FrameExtractor.h
@@ -40,6 +42,10 @@ target_link_libraries(VideoTo3D PRIVATE
     Qt6::Concurrent
     Qt6::OpenGL
 )
+
+# spdlog
+find_package(spdlog REQUIRED)
+target_link_libraries(VideoTo3D PRIVATE spdlog::spdlog)
 
 # OpenCV
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs videoio)

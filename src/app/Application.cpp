@@ -1,8 +1,8 @@
 // /Share/GenerateModel/src/app/Application.cpp
 #include "Application.h"
+#include "../core/LogManager.h"
 #include <QQmlContext>
 #include <QWindow>
-#include <QDebug>
 
 Application::Application(int& argc, char** argv)
     : QGuiApplication(argc, argv)
@@ -16,6 +16,8 @@ Application::Application(int& argc, char** argv)
 
 Application::~Application()
 {
+    LogManager::shutdown();
+
     if (m_server) {
         m_server->close();
     }
@@ -27,26 +29,28 @@ void Application::init()
     QLocalSocket probe;
     probe.connectToServer(kServerName);
     if (probe.waitForConnected(500)) {
-        // 已有主实例 → 通知激活 → 退出
         probe.write("activate");
         probe.waitForBytesWritten(500);
         probe.disconnectFromServer();
-        qDebug() << "Another instance is running. Activating it, then exit.";
-        // 直接退出事件循环（main 中通过 shouldContinue 判断）
+        // 第二实例不初始化日志，直接退出
         return;
     }
 
-    // 我们是主实例 → 启动监听
+    // 初始化日志系统
+    LogManager::init(QCoreApplication::applicationDirPath() + "/logs");
+
+    LogManager::info("VideoTo3D v{} 启动", version().toStdString());
+
+    // 启动本地服务器（单实例监听）
     QLocalServer::removeServer(kServerName);
 
     m_server = new QLocalServer(this);
     if (!m_server->listen(kServerName)) {
-        qWarning() << "QLocalServer::listen failed:" << m_server->errorString();
-        // 降级运行（不阻塞）
+        LogManager::warn("QLocalServer 监听失败: {}", m_server->errorString().toStdString());
     } else {
         connect(m_server, &QLocalServer::newConnection,
                 this, &Application::onNewConnection);
-        qDebug() << "Primary instance listening on:" << kServerName;
+        LogManager::debug("单实例服务器已启动: {}", std::string(kServerName));
     }
 
     setupQml();

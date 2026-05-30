@@ -22,6 +22,7 @@ class PipelineOrchestrator : public QObject {
 
 public:
     explicit PipelineOrchestrator(QObject* parent = nullptr);
+    ~PipelineOrchestrator();
 
     /// 注册管线阶段 (所有权转移给 orchestrator)
     void addStage(IStage* stage);

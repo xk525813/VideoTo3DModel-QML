@@ -6,6 +6,11 @@
 PipelineOrchestrator::PipelineOrchestrator(QObject* parent)
     : QObject(parent) {}
 
+PipelineOrchestrator::~PipelineOrchestrator() {
+    qDeleteAll(m_stages);
+    m_stages.clear();
+}
+
 void PipelineOrchestrator::addStage(IStage* stage) {
     m_stages.append(stage);
 }

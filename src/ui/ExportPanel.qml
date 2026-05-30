@@ -57,7 +57,7 @@ Rectangle {
             id: depCheckBtn
             text: "检查环境依赖"
             Layout.fillWidth: true
-            implicitHeight: 36
+            Layout.preferredHeight: 36
             flat: false
             onClicked: {
                 if (bridge) {
@@ -89,7 +89,7 @@ Rectangle {
             id: openOutputBtn
             text: "打开输出目录"
             Layout.fillWidth: true
-            implicitHeight: 36
+            Layout.preferredHeight: 36
             enabled: bridge && bridge.pipelineState === "completed"
 
             background: Rectangle {

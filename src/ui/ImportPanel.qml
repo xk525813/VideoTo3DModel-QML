@@ -70,7 +70,7 @@ Rectangle {
             id: browseBtn
             text: "选择文件..."
             Layout.fillWidth: true
-            implicitHeight: 36
+            Layout.preferredHeight: 36
             flat: false
             onClicked: fileDialog.open()
 
@@ -81,10 +81,10 @@ Rectangle {
             contentItem: Text {
                 text: browseBtn.text
                 color: "#FFFFFF"
+                font.pixelSize: 13
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
             }
         }
 
@@ -108,7 +108,7 @@ Rectangle {
             id: startBtn
             text: bridge && bridge.pipelineState === "running" ? "处理中..." : "开始重建"
             Layout.fillWidth: true
-            implicitHeight: 42
+            Layout.preferredHeight: 42
             enabled: bridge && bridge.pipelineState !== "running" && selectedFileLabel.visible
             onClicked: {
                 if (bridge && selectedFileLabel.visible) {
@@ -128,8 +128,8 @@ Rectangle {
             contentItem: Text {
                 text: startBtn.text
                 color: startBtn.enabled ? "#FFFFFF" : "#94A3B8"
-                font.weight: Font.Bold
                 font.pixelSize: 14
+                font.weight: Font.Bold
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

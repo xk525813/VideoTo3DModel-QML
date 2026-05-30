@@ -12,6 +12,16 @@ ApplicationWindow {
     title: "VideoTo3D"
     color: "#F0F4F8"
 
+    // 全局亮色调色板
+    palette {
+        window: "#F0F4F8"
+        windowText: "#1E293B"
+        base: "#FFFFFF"
+        text: "#1E293B"
+        button: "#6366F1"
+        buttonText: "#FFFFFF"
+    }
+
     PipelineBridge {
         id: bridge
 
@@ -27,13 +37,12 @@ ApplicationWindow {
         }
     }
 
-    // 状态栏
     footer: Rectangle {
         height: 32
         color: "#E2E8F0"
         RowLayout {
             anchors.fill: parent
-            anchors.margins: 4
+            anchors.margins: 8
             Text {
                 text: "状态: " + bridge.pipelineState
                 color: "#334155"
@@ -50,13 +59,11 @@ ApplicationWindow {
         }
     }
 
-    // 主布局
     RowLayout {
         anchors.fill: parent
         anchors.margins: 12
         spacing: 12
 
-        // 左侧: 导入 + 设置
         ColumnLayout {
             Layout.preferredWidth: 280
             Layout.fillHeight: true
@@ -66,7 +73,6 @@ ApplicationWindow {
             SettingsPanel { id: settingsPanel; bridge: bridge }
         }
 
-        // 中央: 预览 + 进度
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -84,7 +90,6 @@ ApplicationWindow {
             }
         }
 
-        // 右侧: 导出
         ExportPanel {
             Layout.preferredWidth: 240
             Layout.fillHeight: true
@@ -92,7 +97,6 @@ ApplicationWindow {
         }
     }
 
-    // 错误弹窗
     Dialog {
         id: errorDialog
         property string dialogTitle: ""
@@ -108,7 +112,6 @@ ApplicationWindow {
         }
     }
 
-    // 完成弹窗
     Dialog {
         id: finishDialog
         property bool success: false

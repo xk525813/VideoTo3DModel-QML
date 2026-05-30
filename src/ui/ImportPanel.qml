@@ -65,20 +65,27 @@ Rectangle {
             visible: false
         }
 
+        // 选择文件按钮
         Button {
+            id: browseBtn
             text: "选择文件..."
             Layout.fillWidth: true
+            implicitHeight: 36
+            flat: false
+            onClicked: fileDialog.open()
+
             background: Rectangle {
-                color: "#6366F1"
+                color: browseBtn.hovered ? "#4F46E5" : "#6366F1"
                 radius: 6
             }
             contentItem: Text {
-                text: parent.text
+                text: browseBtn.text
                 color: "#FFFFFF"
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
             }
-            onClicked: fileDialog.open()
         }
 
         FileDialog {
@@ -96,32 +103,35 @@ Rectangle {
 
         Item { Layout.fillHeight: true }
 
+        // 开始重建按钮
         Button {
+            id: startBtn
             text: bridge && bridge.pipelineState === "running" ? "处理中..." : "开始重建"
             Layout.fillWidth: true
-            Layout.preferredHeight: 42
+            implicitHeight: 42
             enabled: bridge && bridge.pipelineState !== "running" && selectedFileLabel.visible
-            background: Rectangle {
-                color: parent.enabled ? "#10B981" : "#CBD5E1"
-                radius: 8
-            }
-            contentItem: Text {
-                text: parent.text
-                color: parent.enabled ? "#FFFFFF" : "#94A3B8"
-                font.weight: Font.Bold
-                font.pixelSize: 14
-                horizontalAlignment: Text.AlignHCenter
-            }
             onClicked: {
                 if (bridge && selectedFileLabel.visible) {
-                    let settings = {
+                    bridge.startPipeline(selectedFileLabel.text, {
                         outputDir: "",
                         gpuEnabled: true,
                         quality: "standard",
                         exportFormat: "glb"
-                    }
-                    bridge.startPipeline(selectedFileLabel.text, settings)
+                    })
                 }
+            }
+
+            background: Rectangle {
+                color: startBtn.enabled ? "#10B981" : "#CBD5E1"
+                radius: 8
+            }
+            contentItem: Text {
+                text: startBtn.text
+                color: startBtn.enabled ? "#FFFFFF" : "#94A3B8"
+                font.weight: Font.Bold
+                font.pixelSize: 14
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
     }

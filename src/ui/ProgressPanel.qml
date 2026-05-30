@@ -55,6 +55,7 @@ Rectangle {
             color: "#64748B"
             font.pixelSize: 12
             wrapMode: Text.Wrap
+            Layout.preferredHeight: 18
         }
 
         Text {
@@ -62,6 +63,7 @@ Rectangle {
             text: "预计剩余: " + Math.ceil((bridge && bridge.stageEta ? bridge.stageEta : 0) / 60) + " 分钟"
             color: "#F59E0B"
             font.pixelSize: 11
+            Layout.preferredHeight: 14
         }
 
         Rectangle {
@@ -75,16 +77,15 @@ Rectangle {
                 id: logView
                 anchors.fill: parent
                 anchors.margins: 6
-                model: logModel
+                model: ListModel { id: logModel }
                 delegate: Text {
                     text: modelData
                     color: "#475569"
                     font.pixelSize: 11
-                    wrapMode: Text.Wrap
                     font.family: "monospace"
+                    wrapMode: Text.Wrap
+                    width: logView.width - 12
                 }
-
-                property ListModel logModel: ListModel {}
             }
         }
     }

@@ -24,37 +24,41 @@ Rectangle {
             font.weight: Font.Bold
         }
 
-        // 贴图通道选择 (阶段 1 仅为 UI 占位)
-        Text { text: "贴图通道"; color: "#334155"; font.pixelSize: 13; font.weight: Font.Medium }
-        CheckBox { text: "漫反射 (Diffuse)"; checked: true; enabled: false
-            contentItem: Text { text: parent.text; color: "#475569"; font.pixelSize: 12 }
+        Text {
+            text: "贴图通道"
+            color: "#334155"
+            font.pixelSize: 13
+            font.weight: Font.Medium
         }
-        CheckBox { text: "法线 (Normal)"; checked: false; enabled: false
-            contentItem: Text { text: parent.text; color: "#94A3B8"; font.pixelSize: 12 }
+        CheckBox {
+            text: "漫反射 (Diffuse)"
+            checked: true
+            enabled: false
         }
-        CheckBox { text: "粗糙度 (Roughness)"; checked: false; enabled: false
-            contentItem: Text { text: parent.text; color: "#94A3B8"; font.pixelSize: 12 }
+        CheckBox {
+            text: "法线 (Normal)"
+            checked: false
+            enabled: false
         }
-        CheckBox { text: "金属度 (Metallic)"; checked: false; enabled: false
-            contentItem: Text { text: parent.text; color: "#94A3B8"; font.pixelSize: 12 }
+        CheckBox {
+            text: "粗糙度 (Roughness)"
+            checked: false
+            enabled: false
+        }
+        CheckBox {
+            text: "金属度 (Metallic)"
+            checked: false
+            enabled: false
         }
 
         Item { Layout.fillHeight: true }
 
         Button {
+            id: depCheckBtn
             text: "检查环境依赖"
             Layout.fillWidth: true
-            background: Rectangle {
-                color: "#F1F5F9"
-                border.color: "#CBD5E1"
-                radius: 6
-            }
-            contentItem: Text {
-                text: parent.text
-                color: "#475569"
-                font.weight: Font.Medium
-                horizontalAlignment: Text.AlignHCenter
-            }
+            implicitHeight: 36
+            flat: false
             onClicked: {
                 if (bridge) {
                     let result = bridge.checkDependencies()
@@ -66,21 +70,40 @@ Rectangle {
                     depDialog.open()
                 }
             }
-        }
 
-        Button {
-            text: "打开输出目录"
-            Layout.fillWidth: true
-            enabled: bridge && bridge.pipelineState === "completed"
             background: Rectangle {
-                color: parent.enabled ? "#6366F1" : "#CBD5E1"
+                color: depCheckBtn.hovered ? "#E2E8F0" : "#F1F5F9"
+                border.color: "#CBD5E1"
                 radius: 6
             }
             contentItem: Text {
-                text: parent.text
-                color: parent.enabled ? "#FFFFFF" : "#94A3B8"
+                text: depCheckBtn.text
+                color: "#475569"
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+        Button {
+            id: openOutputBtn
+            text: "打开输出目录"
+            Layout.fillWidth: true
+            implicitHeight: 36
+            enabled: bridge && bridge.pipelineState === "completed"
+
+            background: Rectangle {
+                color: openOutputBtn.enabled
+                       ? (openOutputBtn.hovered ? "#4F46E5" : "#6366F1")
+                       : "#CBD5E1"
+                radius: 6
+            }
+            contentItem: Text {
+                text: openOutputBtn.text
+                color: openOutputBtn.enabled ? "#FFFFFF" : "#94A3B8"
+                font.weight: Font.Medium
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
     }

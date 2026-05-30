@@ -16,13 +16,13 @@ ApplicationWindow {
         id: bridge
 
         onPipelineError: (title, message) => {
-            errorDialog.title = title
-            errorDialog.message = message
+            errorDialog.dialogTitle = title
+            errorDialog.dialogMessage = message
             errorDialog.open()
         }
         onPipelineFinished: (success, message) => {
             finishDialog.success = success
-            finishDialog.message = message
+            finishDialog.dialogMessage = message
             finishDialog.open()
         }
     }
@@ -95,13 +95,13 @@ ApplicationWindow {
     // 错误弹窗
     Dialog {
         id: errorDialog
-        property string title: ""
-        property string message: ""
-        title: errorDialog.title
+        property string dialogTitle: ""
+        property string dialogMessage: ""
+        title: errorDialog.dialogTitle
         modal: true
         standardButtons: Dialog.Ok
         Label {
-            text: errorDialog.message
+            text: errorDialog.dialogMessage
             wrapMode: Text.Wrap
             color: "#cdd6f4"
         }
@@ -111,12 +111,12 @@ ApplicationWindow {
     Dialog {
         id: finishDialog
         property bool success: false
-        property string message: ""
+        property string dialogMessage: ""
         title: finishDialog.success ? "完成" : "失败"
         modal: true
         standardButtons: Dialog.Ok
         Label {
-            text: finishDialog.message
+            text: finishDialog.dialogMessage
             wrapMode: Text.Wrap
             color: "#cdd6f4"
         }

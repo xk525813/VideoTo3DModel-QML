@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 Rectangle {
     id: root
+    clip: true
     color: "#FFFFFF"
     border.color: "#E2E8F0"
     border.width: 1

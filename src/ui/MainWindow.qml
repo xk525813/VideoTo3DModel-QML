@@ -64,25 +64,27 @@ ApplicationWindow {
         anchors.margins: 12
         spacing: 12
 
+        // 左侧栏 — 固定宽度
         ColumnLayout {
             Layout.preferredWidth: 280
+            Layout.minimumWidth: 240
+            Layout.maximumWidth: 300
             Layout.fillHeight: true
             spacing: 10
 
             ImportPanel {
-                id: importPanel
                 Layout.fillWidth: true
-                Layout.preferredHeight: 380
+                Layout.preferredHeight: 340
                 bridge: bridge
             }
             SettingsPanel {
-                id: settingsPanel
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 bridge: bridge
             }
         }
 
+        // 中央 — 弹性填充
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -100,9 +102,10 @@ ApplicationWindow {
             }
         }
 
+        // 右侧栏 — 固定宽度
         ExportPanel {
-            id: exportPanel
             Layout.preferredWidth: 240
+            Layout.minimumWidth: 200
             Layout.maximumWidth: 260
             Layout.fillHeight: true
             bridge: bridge

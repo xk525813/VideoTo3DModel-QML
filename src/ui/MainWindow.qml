@@ -66,29 +66,41 @@ ApplicationWindow {
             SettingsPanel { id: settingsPanel; bridge: bridge }
         }
 
-        // 中央: 占位 (后续任务替换为预览+进度)
-        Rectangle {
+        // 中央: 进度面板
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "transparent"
+            spacing: 8
 
-            ColumnLayout {
-                anchors.centerIn: parent
-                spacing: 12
+            // 预览占位 (Task 15 替换)
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                color: "#11111b"
+                border.color: "#313244"
+                border.width: 1
+                radius: 8
+
                 Text {
-                    text: "VideoTo3D"
-                    color: "#cdd6f4"
-                    font.pixelSize: 28
-                    font.weight: Font.Bold
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                Text {
-                    text: "视频转 3D 模型工具"
-                    color: "#6c7086"
+                    anchors.centerIn: parent
+                    text: "3D 模型预览区域"
+                    color: "#585b70"
                     font.pixelSize: 14
-                    Layout.alignment: Qt.AlignHCenter
                 }
             }
+
+            ProgressPanel {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 120
+                bridge: bridge
+            }
+        }
+
+        // 右侧: 导出
+        ExportPanel {
+            Layout.preferredWidth: 240
+            Layout.fillHeight: true
+            bridge: bridge
         }
     }
 

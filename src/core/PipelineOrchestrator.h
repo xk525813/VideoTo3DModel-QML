@@ -1,0 +1,6 @@
+#ifndef CORE_PIPELINEORCHESTRATOR_H_H
+#define CORE_PIPELINEORCHESTRATOR_H_H
+
+// TODO: Implement PipelineOrchestrator
+
+#endif // CORE_PIPELINEORCHESTRATOR_H_H

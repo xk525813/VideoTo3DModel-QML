@@ -1,0 +1,6 @@
+#ifndef BRIDGE_PIPELINEBRIDGE_H_H
+#define BRIDGE_PIPELINEBRIDGE_H_H
+
+// TODO: Implement PipelineBridge
+
+#endif // BRIDGE_PIPELINEBRIDGE_H_H

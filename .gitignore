@@ -1,0 +1,10 @@
+build/
+cmake-build-*/
+.superpowers/
+*.o
+*.obj
+moc_*
+ui_*
+qrc_*
+*~
+.DS_Store

@@ -1,0 +1,6 @@
+#ifndef CORE_HARDWAREDETECTOR_H_H
+#define CORE_HARDWAREDETECTOR_H_H
+
+// TODO: Implement HardwareDetector
+
+#endif // CORE_HARDWAREDETECTOR_H_H

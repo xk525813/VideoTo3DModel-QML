@@ -114,10 +114,10 @@ Rectangle {
             onClicked: {
                 if (bridge && selectedFileLabel.visible) {
                     bridge.startPipeline(selectedFileLabel.text, {
-                        outputDir: "",
-                        gpuEnabled: true,
-                        quality: "standard",
-                        exportFormat: "glb"
+                        outputDir: settingsPanel.outputDir,
+                        gpuEnabled: settingsPanel.gpuEnabled,
+                        quality: settingsPanel.qualityChoice,
+                        exportFormat: settingsPanel.exportFormat
                     })
                 }
             }

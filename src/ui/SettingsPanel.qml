@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Rectangle {
     id: root
@@ -11,6 +12,12 @@ Rectangle {
     radius: 10
 
     property var bridge: null
+
+    // 暴露给 ImportPanel 读取的设置值
+    property alias outputDir: outputDirField.text
+    property alias gpuEnabled: gpuSwitch.checked
+    property alias qualityChoice: qualityCombo.currentValue
+    property alias exportFormat: formatCombo.currentValue
 
     ColumnLayout {
         anchors.fill: parent
@@ -74,21 +81,63 @@ Rectangle {
         }
 
         Text {
-            text: "输出目录"
+            text: "导出目录"
             color: "#334155"
             font.pixelSize: 13
         }
-        TextField {
-            id: outputDirField
+        RowLayout {
             Layout.fillWidth: true
-            placeholderText: "默认: ~/VideoTo3D_Projects"
-            color: "#1E293B"
-            placeholderTextColor: "#94A3B8"
-            background: Rectangle {
+            spacing: 6
+
+            TextField {
+                id: outputDirField
+                Layout.fillWidth: true
+                placeholderText: "默认: ~/VideoTo3D_Projects"
+                color: "#1E293B"
+                placeholderTextColor: "#94A3B8"
+                background: Rectangle {
+                    implicitHeight: 32
+                    color: "#F1F5F9"
+                    radius: 6
+                    border.color: outputDirField.activeFocus ? "#6366F1" : "#CBD5E1"
+                }
+            }
+
+            Button {
+                id: browseDirBtn
+                text: "..."
+                implicitWidth: 36
                 implicitHeight: 32
-                color: "#F1F5F9"
-                radius: 6
-                border.color: outputDirField.activeFocus ? "#6366F1" : "#CBD5E1"
+                flat: false
+                onClicked: folderDialog.open()
+
+                background: Rectangle {
+                    color: browseDirBtn.hovered ? "#E2E8F0" : "#F1F5F9"
+                    border.color: "#CBD5E1"
+                    radius: 6
+                }
+                contentItem: Text {
+                    text: browseDirBtn.text
+                    color: "#475569"
+                    font.weight: Font.Bold
+                    font.pixelSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
+
+        FolderDialog {
+            id: folderDialog
+            title: "选择输出目录"
+            currentFolder: outputDirField.text
+                ? "file://" + outputDirField.text
+                : StandardPaths.writableLocation(StandardPaths.HomeLocation)
+            onAccepted: {
+                let path = selectedFolder.toString()
+                if (path.startsWith("file://"))
+                    path = path.substring(7)
+                outputDirField.text = path
             }
         }
     }

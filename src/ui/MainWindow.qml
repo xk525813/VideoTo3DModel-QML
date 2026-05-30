@@ -69,8 +69,18 @@ ApplicationWindow {
             Layout.fillHeight: true
             spacing: 10
 
-            ImportPanel { id: importPanel; bridge: bridge }
-            SettingsPanel { id: settingsPanel; bridge: bridge }
+            ImportPanel {
+                id: importPanel
+                Layout.fillWidth: true
+                Layout.preferredHeight: 380
+                bridge: bridge
+            }
+            SettingsPanel {
+                id: settingsPanel
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                bridge: bridge
+            }
         }
 
         ColumnLayout {
@@ -91,7 +101,9 @@ ApplicationWindow {
         }
 
         ExportPanel {
+            id: exportPanel
             Layout.preferredWidth: 240
+            Layout.maximumWidth: 260
             Layout.fillHeight: true
             bridge: bridge
         }

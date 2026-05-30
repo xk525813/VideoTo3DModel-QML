@@ -1,6 +1,11 @@
-#ifndef CORE_TEXTURESTAGE_H_H
-#define CORE_TEXTURESTAGE_H_H
+#pragma once
 
-// TODO: Implement TextureStage
+#include "IStage.h"
 
-#endif // CORE_TEXTURESTAGE_H_H
+class TextureStage : public IStage {
+public:
+    QString name() const override { return "texture"; }
+
+    StageResult execute(const QString& projectDir,
+                        const QJsonObject& config) override;
+};

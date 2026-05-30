@@ -36,12 +36,11 @@ target_link_libraries(VideoTo3D PRIVATE
     Qt6::Core
     Qt6::Qml
     Qt6::Gui
-    Qt6::Widgets
     Qt6::Concurrent
     Qt6::OpenGL
 )
 
-# OpenCV (通过 find_package)
+# OpenCV
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs videoio)
 target_link_libraries(VideoTo3D PRIVATE ${OpenCV_LIBS})
 target_include_directories(VideoTo3D PRIVATE ${OpenCV_INCLUDE_DIRS})

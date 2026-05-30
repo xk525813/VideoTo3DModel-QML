@@ -16,7 +16,6 @@ find_package(Qt6 REQUIRED COMPONENTS
     Core
     Qml
     Gui
-    Widgets
     Concurrent
     OpenGL
 )

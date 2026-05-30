@@ -1,6 +1,16 @@
-#ifndef CORE_SFMSTAGE_H_H
-#define CORE_SFMSTAGE_H_H
+// /Share/GenerateModel/src/core/SfMStage.h
+#pragma once
 
-// TODO: Implement SfMStage
+#include "IStage.h"
 
-#endif // CORE_SFMSTAGE_H_H
+class SfMStage : public IStage {
+public:
+    QString name() const override { return "sfm"; }
+
+    StageResult execute(const QString& projectDir,
+                        const QJsonObject& config) override;
+
+private:
+    /// 向 stdout 输出进度行 (由 QProcess 捕获 → PipelineBridge)
+    static void reportProgress(double progress, const QString& status, int etaSeconds);
+};

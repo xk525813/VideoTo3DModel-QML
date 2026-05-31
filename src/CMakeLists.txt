@@ -29,7 +29,7 @@ set(HEADERS
 )
 
 qt_add_executable(VideoTo3D ${SOURCES} ${HEADERS}
-    ui/qml.qrc
+    resource/qml.qrc
 )
 
 target_include_directories(VideoTo3D PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

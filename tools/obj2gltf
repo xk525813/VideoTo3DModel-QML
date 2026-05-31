@@ -1,0 +1,4 @@
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+BUNDLE="$DIR/obj2gltf_bundle"
+NODE_PATH="$BUNDLE/node_pkg/node_modules" "$BUNDLE/node" "$BUNDLE/node_pkg/bin/obj2gltf.js" "$@"

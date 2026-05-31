@@ -5,7 +5,7 @@
 #include <QDebug>
 
 StageResult TextureStage::execute(const QString& projectDir,
-                                   const QJsonObject& config) {
+                                   const QJsonObject& config, const ProgressCallback& onProgress) {
     QString meshDir = projectDir + "/mesh";
     QString texturesDir = projectDir + "/textures";
 

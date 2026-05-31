@@ -15,6 +15,7 @@ Rectangle {
     property var settingsPanel: null
     property string selectedFilePath: ""
     property bool fileSelected: false
+    readonly property bool isRunning: bridge && bridge.pipelineState === "running"
 
     Layout.fillWidth: true
     Layout.preferredWidth: 280
@@ -44,6 +45,7 @@ Rectangle {
             DropArea {
                 id: fileDropArea
                 anchors.fill: parent
+                enabled: !root.isRunning
                 onDropped: (drop) => {
                     if (drop.urls.length > 0) {
                         let path = drop.urls[0].toString()
@@ -74,6 +76,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 36
             flat: false
+            enabled: !root.isRunning
             onClicked: fileBrowseDialog.open()
 
             background: Rectangle {

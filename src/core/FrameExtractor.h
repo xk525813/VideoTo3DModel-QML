@@ -10,7 +10,8 @@ public:
     QString name() const override { return "frame_extraction"; }
 
     StageResult execute(const QString& projectDir,
-                        const QJsonObject& config) override;
+                        const QJsonObject& config,
+                        const ProgressCallback& onProgress = {}) override;
 
     /// 用 OpenCV 对帧做模糊检测，返回质量评分 0.0-1.0
     static double blurScore(const QString& imagePath);

@@ -9,7 +9,7 @@ public:
     QString name() const override { return "export"; }
 
     StageResult execute(const QString& projectDir,
-                        const QJsonObject& config) override;
+                        const QJsonObject& config, const ProgressCallback& onProgress = {}) override;
 
     /// 列出可用的导出格式
     static QStringList availableFormats();

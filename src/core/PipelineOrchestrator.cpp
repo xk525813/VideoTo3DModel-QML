@@ -38,28 +38,38 @@ void PipelineOrchestrator::run(const QString& projectDir,
 
         // 断点续传: 跳过已完成的阶段
         if (ProjectManager::isStageComplete(projectDir, stageName)) {
-            LogManager::debug("跳过已完成阶段: {}", stageName.toStdString());
+            LogManager::debug(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                              "跳过已完成阶段: {}", stageName.toStdString());
             continue;
         }
 
-        LogManager::info("▶ 阶段开始: {}", stageName.toStdString());
+        LogManager::info(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                         "▶ 阶段开始: {}", stageName.toStdString());
         emit stageStarted(stageName);
+        emit progressUpdated(stageName, 0.0, "开始...", 0);
 
-        StageResult result = stage->execute(projectDir, config);
+        // 构造进度回调，将 stage 内部进度转发到 QML
+        auto onProgress = [this, &stageName](double p, const QString& status, int eta) {
+            emit progressUpdated(stageName, p, status, eta);
+        };
+
+        StageResult result = stage->execute(projectDir, config, onProgress);
 
         if (!result.ok) {
-            LogManager::error("✘ 阶段失败: {} — {}",
+            LogManager::error(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                              "✘ 阶段失败: {} — {}",
                               stageName.toStdString(),
                               result.errorMessage.toStdString());
             emit stageFailed(stageName, result.errorMessage);
             setState(PipelineState::Failed);
-            emit pipelineFinished(false, result.errorMessage);
+            //emit pipelineFinished(false, result.errorMessage);
             return;
         }
 
         // 标记完成
         ProjectManager::markStageComplete(projectDir, stageName, true);
-        LogManager::info("✔ 阶段完成: {}", stageName.toStdString());
+        LogManager::info(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                         "✔ 阶段完成: {}", stageName.toStdString());
         emit stageCompleted(stageName);
     }
 

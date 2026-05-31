@@ -7,5 +7,5 @@ public:
     QString name() const override { return "texture"; }
 
     StageResult execute(const QString& projectDir,
-                        const QJsonObject& config) override;
+                        const QJsonObject& config, const ProgressCallback& onProgress = {}) override;
 };

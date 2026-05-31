@@ -5,23 +5,13 @@
 #include <QDir>
 #include <QFile>
 #include <QJsonObject>
-#include <QJsonDocument>
-#include <iostream>
 #include <QDebug>
 
-void MVSStage::reportProgress(double progress, const QString& status, int etaSeconds) {
-    QJsonObject msg;
-    msg["stage"] = "mvs";
-    msg["progress"] = progress;
-    msg["status"] = status;
-    msg["eta_seconds"] = etaSeconds;
-    std::cout << QJsonDocument(msg).toJson(QJsonDocument::Compact).toStdString()
-              << std::endl;
-}
 
 StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir,
-                                            const QJsonObject& tools) {
-    reportProgress(0.05, "converting_colmap_to_mvs", 0);
+                                            const QJsonObject& tools,
+                                            const ProgressCallback& onProgress) {
+    if (onProgress) onProgress(0.05, "converting_colmap_to_mvs", 0);
 
     QString sfmDir = projectDir + "/sfm";
     QString meshDir = projectDir + "/mesh";
@@ -90,11 +80,11 @@ StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir,
 }
 
 StageResult MVSStage::execute(const QString& projectDir,
-                               const QJsonObject& config) {
+                               const QJsonObject& config, const ProgressCallback& onProgress) {
     QJsonObject tools = config["tools"].toObject();
 
     // Step 1: 格式转换
-    StageResult convResult = convertCOLMAPtoMVS(projectDir, tools);
+    StageResult convResult = convertCOLMAPtoMVS(projectDir, tools, onProgress);
     if (!convResult.ok)
         return convResult;
 
@@ -107,7 +97,7 @@ StageResult MVSStage::execute(const QString& projectDir,
     QString refinePath = tools["RefineTexture"].toString("RefineTexture");
 
     // Step 2: DensifyPointCloud
-    reportProgress(0.3, "densifying_point_cloud", 0);
+    if (onProgress) onProgress(0.3, "densifying_point_cloud", 0);
 
     QProcess densify;
     densify.start(densifyPath, {
@@ -124,7 +114,7 @@ StageResult MVSStage::execute(const QString& projectDir,
     }
 
     // Step 3: ReconstructMesh
-    reportProgress(0.7, "reconstructing_mesh", 0);
+    if (onProgress) onProgress(0.7, "reconstructing_mesh", 0);
 
     QProcess reconstruct;
     reconstruct.start(reconstructPath, {
@@ -140,7 +130,7 @@ StageResult MVSStage::execute(const QString& projectDir,
     }
 
     // Step 4: RefineTexture (可选)
-    reportProgress(0.9, "refining_texture", 0);
+    if (onProgress) onProgress(0.9, "refining_texture", 0);
 
     QProcess texture;
     texture.start(refinePath, {
@@ -150,6 +140,6 @@ StageResult MVSStage::execute(const QString& projectDir,
     texture.waitForFinished(300000);
     // RefineTexture 失败不阻塞，接受无纹理的模型
 
-    reportProgress(1.0, "mvs_complete", 0);
+    if (onProgress) onProgress(1.0, "mvs_complete", 0);
     return StageResult::success();
 }

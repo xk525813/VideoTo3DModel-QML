@@ -8,9 +8,9 @@ public:
     QString name() const override { return "sfm"; }
 
     StageResult execute(const QString& projectDir,
-                        const QJsonObject& config) override;
+                        const QJsonObject& config, const ProgressCallback& onProgress = {}) override;
 
 private:
     /// 向 stdout 输出进度行 (由 QProcess 捕获 → PipelineBridge)
-    static void reportProgress(double progress, const QString& status, int etaSeconds);
+    // removed: use onProgress callback(double progress, const QString& status, int etaSeconds);
 };

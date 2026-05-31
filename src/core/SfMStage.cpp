@@ -5,22 +5,11 @@
 #include <QProcess>
 #include <QDir>
 #include <QJsonObject>
-#include <QJsonDocument>
 #include <QFile>
-#include <iostream>
 
-void SfMStage::reportProgress(double progress, const QString& status, int etaSeconds) {
-    QJsonObject msg;
-    msg["stage"] = "sfm";
-    msg["progress"] = progress;
-    msg["status"] = status;
-    msg["eta_seconds"] = etaSeconds;
-    std::cout << QJsonDocument(msg).toJson(QJsonDocument::Compact).toStdString()
-              << std::endl;
-}
 
 StageResult SfMStage::execute(const QString& projectDir,
-                               const QJsonObject& config) {
+                               const QJsonObject& config, const ProgressCallback& onProgress) {
     QString framesDir = projectDir + "/frames";
     QString sfmDir = projectDir + "/sfm";
     QString dbPath = sfmDir + "/database.db";
@@ -29,7 +18,7 @@ StageResult SfMStage::execute(const QString& projectDir,
     QString colmapPath = config["tools"].toObject()["colmap"].toString("colmap");
 
     // Step 1: COLMAP feature_extractor
-    reportProgress(0.1, "extracting_features", 0);
+    if (onProgress) onProgress(0.1, "extracting_features", 0);
 
     QProcess extractor;
     extractor.start(colmapPath, {
@@ -51,7 +40,7 @@ StageResult SfMStage::execute(const QString& projectDir,
 
     // Step 2: COLMAP 特征匹配
     // 先用 sequential_matcher（更稳定），失败再尝试 exhaustive_matcher
-    reportProgress(0.4, "matching_features", 0);
+    if (onProgress) onProgress(0.4, "matching_features", 0);
 
     QProcess matcher;
     matcher.start(colmapPath, {
@@ -84,7 +73,7 @@ StageResult SfMStage::execute(const QString& projectDir,
     }
 
     // Step 3: COLMAP mapper (增量式 SfM)
-    reportProgress(0.6, "running_sfm_reconstruction", 0);
+    if (onProgress) onProgress(0.6, "running_sfm_reconstruction", 0);
 
     QProcess mapper;
     mapper.start(colmapPath, {
@@ -128,6 +117,6 @@ StageResult SfMStage::execute(const QString& projectDir,
             QStringLiteral("COLMAP 未能成功生成相机参数。视频中可能缺少足够的运动视差。"));
     }
 
-    reportProgress(1.0, "sfm_complete", 0);
+    if (onProgress) onProgress(1.0, "sfm_complete", 0);
     return StageResult::success();
 }

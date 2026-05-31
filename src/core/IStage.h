@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <functional>
 
 struct StageResult {
     bool ok = true;
@@ -11,6 +12,9 @@ struct StageResult {
     static StageResult success() { return {true, {}}; }
     static StageResult failure(const QString& msg) { return {false, msg}; }
 };
+
+/// 进度回调: (progress 0.0~1.0, statusText, etaSeconds)
+using ProgressCallback = std::function<void(double, const QString&, int)>;
 
 class IStage {
 public:
@@ -22,7 +26,9 @@ public:
     /// 执行此阶段
     /// @param projectDir  项目根目录的绝对路径
     /// @param config      项目配置 (来自 config/settings.json)
+    /// @param onProgress  进度回调，可选
     /// @return 执行结果
     virtual StageResult execute(const QString& projectDir,
-                                const QJsonObject& config) = 0;
+                                const QJsonObject& config,
+                                const ProgressCallback& onProgress = {}) = 0;
 };

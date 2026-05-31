@@ -13,7 +13,8 @@
 #include <opencv2/imgproc.hpp>
 
 StageResult FrameExtractor::execute(const QString& projectDir,
-                                     const QJsonObject& config) {
+                                     const QJsonObject& config,
+                                     const ProgressCallback& onProgress) {
     QString sourceDir = projectDir + "/source";
     QString framesDir = projectDir + "/frames";
 
@@ -30,6 +31,8 @@ StageResult FrameExtractor::execute(const QString& projectDir,
     QString videoPath = sd.absoluteFilePath(videos.first());
 
     int maxDim = config["pipelineStrategy"].toObject()["maxFrameDimension"].toInt(1920);
+
+    if (onProgress) onProgress(0.3, "FFmpeg 提取帧中...", 0);
 
     // 使用 FFmpeg 提取帧
     QProcess ffmpeg;

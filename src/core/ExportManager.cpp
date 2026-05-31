@@ -12,7 +12,7 @@ QStringList ExportManager::availableFormats() {
 }
 
 StageResult ExportManager::execute(const QString& projectDir,
-                                    const QJsonObject& config) {
+                                    const QJsonObject& config, const ProgressCallback& onProgress) {
     QString format = config["exportFormat"].toString("glb");
     QString meshDir = projectDir + "/mesh";
     QString texturesDir = projectDir + "/textures";

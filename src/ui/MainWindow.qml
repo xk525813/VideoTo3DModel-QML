@@ -121,7 +121,10 @@ ApplicationWindow {
         title: pipelineErrorDialog.dialogTitle
         modal: true
         implicitWidth: 460
-        padding: 0
+        leftPadding: 28
+        rightPadding: 24
+        topPadding: 24
+        bottomPadding: 16
         standardButtons: Dialog.Ok
 
         background: Rectangle {
@@ -143,10 +146,6 @@ ApplicationWindow {
 
         contentItem: ColumnLayout {
             spacing: 12
-            topPadding: 24
-            bottomPadding: 16
-            leftPadding: 28
-            rightPadding: 24
 
             RowLayout {
                 spacing: 10
@@ -188,7 +187,10 @@ ApplicationWindow {
         title: ""
         modal: true
         implicitWidth: 440
-        padding: 0
+        leftPadding: 28
+        rightPadding: 24
+        topPadding: 24
+        bottomPadding: 16
         standardButtons: Dialog.Ok
 
         background: Rectangle {
@@ -210,10 +212,6 @@ ApplicationWindow {
 
         contentItem: ColumnLayout {
             spacing: 12
-            topPadding: 24
-            bottomPadding: 16
-            leftPadding: 28
-            rightPadding: 24
 
             RowLayout {
                 spacing: 10

@@ -12,8 +12,9 @@ Rectangle {
     radius: 10
 
     property var bridge: null
+    property string selectedFilePath: ""
+    property bool fileSelected: false
 
-    // 约束：不超出父布局宽度
     Layout.fillWidth: true
     Layout.preferredWidth: 280
     Layout.maximumWidth: 300
@@ -47,17 +48,17 @@ Rectangle {
                         let path = drop.urls[0].toString()
                         if (path.startsWith("file://"))
                             path = path.substring(7)
-                        selectedFileLabel.text = path
-                        selectedFileLabel.visible = true
+                        root.selectedFilePath = path
+                        root.fileSelected = true
                     }
                 }
 
                 Text {
                     anchors.centerIn: parent
-                    text: selectedFileLabel.visible
-                          ? selectedFileLabel.text.split("/").pop()
+                    text: root.fileSelected
+                          ? root.selectedFilePath.split("/").pop()
                           : "拖放视频文件到此处"
-                    color: selectedFileLabel.visible ? "#059669" : "#94A3B8"
+                    color: root.fileSelected ? "#059669" : "#94A3B8"
                     font.pixelSize: 13
                     elide: Text.ElideMiddle
                     width: parent.width - 16
@@ -66,12 +67,6 @@ Rectangle {
             }
         }
 
-        Text {
-            id: selectedFileLabel
-            visible: false
-        }
-
-        // 选择文件按钮
         Button {
             id: browseBtn
             text: "选择文件..."
@@ -102,23 +97,22 @@ Rectangle {
                 let path = selectedFile.toString()
                 if (path.startsWith("file://"))
                     path = path.substring(7)
-                selectedFileLabel.text = path
-                selectedFileLabel.visible = true
+                root.selectedFilePath = path
+                root.fileSelected = true
             }
         }
 
         Item { Layout.fillHeight: true }
 
-        // 开始重建按钮
         Button {
             id: startBtn
             text: bridge && bridge.pipelineState === "running" ? "处理中..." : "开始重建"
             Layout.fillWidth: true
             Layout.preferredHeight: 42
-            enabled: bridge && bridge.pipelineState !== "running" && selectedFileLabel.visible
+            enabled: bridge && bridge.pipelineState !== "running" && root.fileSelected
             onClicked: {
-                if (bridge && selectedFileLabel.visible) {
-                    bridge.startPipeline(selectedFileLabel.text, {
+                if (bridge && root.fileSelected) {
+                    bridge.startPipeline(root.selectedFilePath, {
                         outputDir: settingsPanel.outputDir,
                         gpuEnabled: settingsPanel.gpuEnabled,
                         quality: settingsPanel.qualityChoice,

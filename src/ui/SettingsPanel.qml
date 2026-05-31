@@ -14,6 +14,8 @@ Rectangle {
 
     property var bridge: null
 
+    readonly property bool isRunning: bridge && bridge.pipelineState === "running"
+
     property alias outputDir: outputDirectoryField.text
     property alias gpuEnabled: gpuToggleSwitch.checked
     property alias qualityChoice: qualityLevelCombo.currentValue
@@ -41,7 +43,7 @@ Rectangle {
             Switch {
                 id: gpuToggleSwitch
                 checked: true
-                enabled: root.bridge ? root.bridge.hardwareProfile.hasGPU : false
+                enabled: (root.bridge ? root.bridge.hardwareProfile.hasGPU : false) && !root.isRunning
             }
         }
 
@@ -53,6 +55,7 @@ Rectangle {
         ComboBox {
             id: qualityLevelCombo
             Layout.fillWidth: true
+            enabled: !root.isRunning
             textRole: "text"
             valueRole: "value"
             model: [
@@ -71,6 +74,7 @@ Rectangle {
         ComboBox {
             id: exportFormatCombo
             Layout.fillWidth: true
+            enabled: !root.isRunning
             textRole: "text"
             valueRole: "value"
             model: [
@@ -92,6 +96,8 @@ Rectangle {
             TextField {
                 id: outputDirectoryField
                 Layout.fillWidth: true
+                enabled: !root.isRunning
+                readonly: !root.isRunning
                 placeholderText: "默认: 运行目录/projects"
                 color: "#1E293B"
                 placeholderTextColor: "#94A3B8"
@@ -108,6 +114,7 @@ Rectangle {
                 text: "..."
                 implicitWidth: 36
                 implicitHeight: 32
+                enabled: !root.isRunning
                 flat: false
                 onClicked: outputDirDialog.open()
 

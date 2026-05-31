@@ -13,6 +13,11 @@ Rectangle {
 
     property var bridge: null
 
+    // 约束：不超出父布局宽度
+    Layout.fillWidth: true
+    Layout.preferredWidth: 280
+    Layout.maximumWidth: 300
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 14

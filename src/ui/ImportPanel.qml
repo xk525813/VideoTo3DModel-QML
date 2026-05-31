@@ -12,6 +12,7 @@ Rectangle {
     radius: 10
 
     property var bridge: null
+    property var settingsPanel: null
     property string selectedFilePath: ""
     property bool fileSelected: false
 

@@ -76,6 +76,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 340
                 bridge: bridge
+                settingsPanel: settingsPanel
             }
             SettingsPanel {
                 Layout.fillWidth: true

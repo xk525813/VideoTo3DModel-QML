@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import QtCore
 
 Rectangle {
     id: root
@@ -81,7 +82,7 @@ Rectangle {
         }
 
         Text {
-            text: "导出目录"
+            text: "输出目录"
             color: "#334155"
             font.pixelSize: 13
         }

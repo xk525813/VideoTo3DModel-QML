@@ -169,12 +169,52 @@ void PipelineBridge::cancelPipeline() {
     }
 }
 
-QString PipelineBridge::checkUnfinishedProject(const QString& projectDir) {
-    QString last = ProjectManager::lastCompletedStage(projectDir);
-    if (last.isEmpty() || last == "export") {
-        return {}; // 没有未完成的或已完成
+QString PipelineBridge::scanForUnfinishedProject() {
+    QString projectsRoot = QDir::currentPath() + "/projects";
+    QDir dir(projectsRoot);
+    if (!dir.exists()) return {};
+
+    QStringList entries = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
+    for (const auto& entry : entries) {
+        QString projectDir = projectsRoot + "/" + entry;
+        QString last = ProjectManager::lastCompletedStage(projectDir);
+        // 有未完成的阶段（非空且未到 export）
+        if (!last.isEmpty() && last != "export") {
+            return projectDir;
+        }
     }
-    return projectDir;
+    return {};
+}
+
+void PipelineBridge::resumePipeline(const QString& projectDir) {
+    QJsonObject settings = ProjectManager::loadSettings(projectDir);
+    if (settings.isEmpty()) {
+        emit pipelineError("恢复失败", "无法加载项目配置文件");
+        return;
+    }
+
+    // 复用 startPipeline 的 worker 创建逻辑
+    auto* worker = new PipelineWorker();
+    worker->setProject(projectDir, settings);
+
+    m_worker = worker;
+    m_worker->moveToThread(&m_workerThread);
+
+    connect(&m_workerThread, &QThread::finished, m_worker, &QObject::deleteLater);
+    connect(m_worker, &PipelineWorker::stageStarted,
+            this, &PipelineBridge::onStageStarted);
+    connect(m_worker, &PipelineWorker::stageCompleted,
+            this, &PipelineBridge::onStageCompleted);
+    connect(m_worker, &PipelineWorker::stageFailed,
+            this, &PipelineBridge::onStageFailed);
+    connect(m_worker, &PipelineWorker::progressUpdated,
+            this, &PipelineBridge::onProgressUpdated);
+    connect(m_worker, &PipelineWorker::finished,
+            this, &PipelineBridge::onPipelineFinished);
+
+    setPipelineState("running");
+    m_workerThread.start();
+    QMetaObject::invokeMethod(m_worker, "process", Qt::QueuedConnection);
 }
 
 void PipelineBridge::clearAndRestart(const QString& projectDir) {

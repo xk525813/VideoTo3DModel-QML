@@ -36,6 +36,92 @@ ApplicationWindow {
         }
     }
 
+    Component.onCompleted: {
+        // 检查是否有未完成的项目
+        let unfinishedDir = pipelineBridge.scanForUnfinishedProject()
+        if (unfinishedDir) {
+            resumeDialog.projectDir = unfinishedDir
+            resumeDialog.open()
+        }
+    }
+
+    Dialog {
+        id: resumeDialog
+        property string projectDir: ""
+        title: "发现未完成的项目"
+        modal: true
+        implicitWidth: 440
+        leftPadding: 28; rightPadding: 24; topPadding: 24; bottomPadding: 16
+
+        footer: DialogButtonBox {
+            alignment: Qt.AlignRight
+            background: Rectangle { color: "transparent" }
+
+            Button {
+                text: "继续上次任务"
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+                implicitWidth: 120; implicitHeight: 34
+                background: Rectangle { color: "#10B981"; radius: 6 }
+                contentItem: Text {
+                    text: parent.text; color: "#FFFFFF"; font.weight: Font.Medium
+                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    pipelineBridge.resumePipeline(resumeDialog.projectDir)
+                    resumeDialog.close()
+                }
+            }
+            Button {
+                text: "重新开始"
+                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+                implicitWidth: 100; implicitHeight: 34
+                background: Rectangle { color: "#CBD5E1"; radius: 6 }
+                contentItem: Text {
+                    text: parent.text; color: "#475569"; font.weight: Font.Medium
+                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                }
+                onClicked: {
+                    pipelineBridge.clearAndRestart(resumeDialog.projectDir)
+                    resumeDialog.close()
+                }
+            }
+        }
+
+        background: Rectangle {
+            radius: 12; color: "#FFFFFF"
+            border.color: "#FDE68A"; border.width: 1
+            Rectangle {
+                width: 4
+                anchors.top: parent.top; anchors.bottom: parent.bottom
+                anchors.left: parent.left; anchors.leftMargin: 1
+                color: "#F59E0B"; radius: 2
+            }
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+            RowLayout {
+                spacing: 10
+                Rectangle {
+                    width: 32; height: 32; radius: 16; color: "#FEF3C7"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "!"; color: "#D97706"; font.pixelSize: 16; font.weight: Font.Bold
+                    }
+                }
+                Text {
+                    text: "发现未完成的项目"
+                    color: "#92400E"; font.pixelSize: 15; font.weight: Font.Bold
+                }
+            }
+            Text {
+                text: "检测到上次处理未完成。你可以继续上次的进度（已完成的阶段会跳过），或者清除后重新开始。"
+                wrapMode: Text.Wrap; color: "#374151"; font.pixelSize: 13; lineHeight: 1.5
+                Layout.fillWidth: true
+            }
+        }
+    }
+
     footer: Rectangle {
         height: 32
         color: "#E2E8F0"

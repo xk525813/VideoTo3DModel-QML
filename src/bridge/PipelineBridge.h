@@ -62,8 +62,11 @@ public:
     /// 取消运行
     Q_INVOKABLE void cancelPipeline();
 
-    /// 检查是否有未完成的项目，返回项目目录或空
-    Q_INVOKABLE QString checkUnfinishedProject(const QString& projectDir);
+    /// 扫描默认项目目录，查找未完成的项目
+    Q_INVOKABLE QString scanForUnfinishedProject();
+
+    /// 恢复未完成的项目（从 checkpoint 继续）
+    Q_INVOKABLE void resumePipeline(const QString& projectDir);
 
     /// 清除中间文件，保留源视频和配置，重新开始
     Q_INVOKABLE void clearAndRestart(const QString& projectDir);

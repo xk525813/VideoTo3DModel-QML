@@ -1,9 +1,9 @@
 // /Share/GenerateModel/src/core/SfMStage.cpp
 #include "SfMStage.h"
 #include "ProjectManager.h"
+#include "LogManager.h"
 #include <QProcess>
 #include <QDir>
-#include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
@@ -37,31 +37,50 @@ StageResult SfMStage::execute(const QString& projectDir,
         "--database_path", dbPath,
         "--image_path", framesDir,
         "--SiftExtraction.use_gpu", useGPU ? "1" : "0",
-        "--SiftExtraction.max_image_size", "2000"
+        "--SiftExtraction.max_image_size", "2000",
+        "--SiftExtraction.max_num_features", "8192"
     });
     extractor.waitForFinished(600000); // 10 分钟超时
 
     if (extractor.exitCode() != 0) {
         return StageResult::failure(
-            QStringLiteral("COLMAP 特征提取失败。请确认视频中有足够纹理特征。\n详情: %1")
+            QStringLiteral("COLMAP 特征提取失败。视频画面可能纹理不足（如纯色背景）。"
+                           "请确保拍摄物体表面有可见纹理，避免大面积纯色。\n详情: %1")
             .arg(QString(extractor.readAllStandardError())));
     }
 
-    // Step 2: COLMAP exhaustive_matcher
+    // Step 2: COLMAP 特征匹配
+    // 先用 sequential_matcher（更稳定），失败再尝试 exhaustive_matcher
     reportProgress(0.4, "matching_features", 0);
 
     QProcess matcher;
     matcher.start(colmapPath, {
-        "exhaustive_matcher",
+        "sequential_matcher",
         "--database_path", dbPath,
         "--SiftMatching.use_gpu", useGPU ? "1" : "0"
     });
     matcher.waitForFinished(600000);
 
-    if (matcher.exitCode() != 0) {
-        return StageResult::failure(
-            QStringLiteral("COLMAP 特征匹配失败。\n详情: %1")
-            .arg(QString(matcher.readAllStandardError())));
+    if (matcher.exitCode() != 0 || matcher.exitStatus() == QProcess::CrashExit) {
+        // 尝试 exhaustive_matcher 作为备选
+        LogManager::warn(spdlog::source_loc{__FILE__, __LINE__, __FUNCTION__},
+                         "sequential_matcher failed, trying exhaustive_matcher");
+        QProcess matcher2;
+        matcher2.start(colmapPath, {
+            "exhaustive_matcher",
+            "--database_path", dbPath,
+            "--SiftMatching.use_gpu", useGPU ? "1" : "0"
+        });
+        matcher2.waitForFinished(600000);
+        if (matcher2.exitCode() != 0 || matcher2.exitStatus() == QProcess::CrashExit) {
+            return StageResult::failure(
+                QStringLiteral("COLMAP 特征匹配失败，可能原因：\n"
+                               "  • 视频画面纹理不足（纯色背景、镜面反射）\n"
+                               "  • 帧间变化太小（相机移动不够）\n"
+                               "  • 提取的有效帧数不够\n"
+                               "请尝试：更换纹理更丰富的拍摄物体，增加拍摄角度变化"));
+
+        }
     }
 
     // Step 3: COLMAP mapper (增量式 SfM)

@@ -19,7 +19,8 @@ StageResult FrameExtractor::execute(const QString& projectDir,
 
     // 查找源视频
     QDir sd(sourceDir);
-    QStringList videos = sd.entryList({"*.mp4", "*.mov", "*.avi", "*.mkv"},
+    QStringList videos = sd.entryList({"*.mp4", "*.MP4", "*.mov", "*.MOV",
+                                        "*.avi", "*.AVI", "*.mkv", "*.MKV"},
                                        QDir::Files);
     if (videos.isEmpty()) {
         return StageResult::failure(

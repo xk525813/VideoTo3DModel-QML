@@ -93,7 +93,10 @@ Rectangle {
         FileDialog {
             id: fileBrowseDialog
             title: "选择视频文件"
-            nameFilters: ["视频文件 (*.mp4 *.mov *.avi *.mkv)"]
+            nameFilters: [
+                "视频文件 (*.mp4 *.mov *.avi *.mkv *.MP4 *.MOV *.AVI *.MKV)",
+                "所有文件 (*)"
+            ]
             onAccepted: {
                 let path = selectedFile.toString()
                 if (path.startsWith("file://"))

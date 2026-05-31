@@ -25,7 +25,8 @@ Rectangle {
             }
             Item { Layout.fillWidth: true }
             Text {
-                text: bridge ? bridge.currentStage : ""
+                id: currentStageLabel
+                text: root.bridge ? root.bridge.currentStage : ""
                 color: "#6366F1"
                 font.pixelSize: 12
                 font.weight: Font.Medium
@@ -33,10 +34,11 @@ Rectangle {
         }
 
         ProgressBar {
+            id: stageProgressBar
             Layout.fillWidth: true
             from: 0
             to: 1.0
-            value: bridge ? bridge.stageProgress : 0
+            value: root.bridge ? root.bridge.stageProgress : 0
             background: Rectangle {
                 implicitHeight: 8
                 color: "#E2E8F0"
@@ -46,12 +48,13 @@ Rectangle {
                 implicitHeight: 8
                 color: "#6366F1"
                 radius: 4
-                width: parent.visualPosition * parent.width
+                width: stageProgressBar.visualPosition * stageProgressBar.width
             }
         }
 
         Text {
-            text: bridge ? bridge.stageStatus : ""
+            id: stageStatusLabel
+            text: root.bridge ? root.bridge.stageStatus : ""
             color: "#64748B"
             font.pixelSize: 12
             wrapMode: Text.Wrap
@@ -59,8 +62,9 @@ Rectangle {
         }
 
         Text {
-            visible: bridge ? bridge.stageEta > 0 : false
-            text: "预计剩余: " + Math.ceil((bridge && bridge.stageEta ? bridge.stageEta : 0) / 60) + " 分钟"
+            id: stageEtaLabel
+            visible: root.bridge ? root.bridge.stageEta > 0 : false
+            text: "预计剩余: " + Math.ceil((root.bridge && root.bridge.stageEta ? root.bridge.stageEta : 0) / 60) + " 分钟"
             color: "#F59E0B"
             font.pixelSize: 11
             Layout.preferredHeight: 14
@@ -74,17 +78,17 @@ Rectangle {
             radius: 6
 
             ListView {
-                id: logView
+                id: logListView
                 anchors.fill: parent
                 anchors.margins: 6
-                model: ListModel { id: logModel }
+                model: ListModel { id: pipelineLogModel }
                 delegate: Text {
                     text: modelData
                     color: "#475569"
                     font.pixelSize: 11
                     font.family: "monospace"
                     wrapMode: Text.Wrap
-                    width: logView.width - 12
+                    width: logListView.width - 12
                 }
             }
         }

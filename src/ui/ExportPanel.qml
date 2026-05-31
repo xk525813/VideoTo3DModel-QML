@@ -54,30 +54,30 @@ Rectangle {
         Item { Layout.fillHeight: true }
 
         Button {
-            id: depCheckBtn
+            id: checkDependenciesBtn
             text: "检查环境依赖"
             Layout.fillWidth: true
             Layout.preferredHeight: 36
             flat: false
             onClicked: {
-                if (bridge) {
-                    let result = bridge.checkDependencies()
+                if (root.bridge) {
+                    let result = root.bridge.checkDependencies()
                     let msg = ""
                     for (let key in result) {
                         msg += key + ": " + (result[key] ? "已安装" : "未安装") + "\n"
                     }
-                    depDialog.message = msg
-                    depDialog.open()
+                    dependencyCheckDialog.message = msg
+                    dependencyCheckDialog.open()
                 }
             }
 
             background: Rectangle {
-                color: depCheckBtn.hovered ? "#E2E8F0" : "#F1F5F9"
+                color: checkDependenciesBtn.hovered ? "#E2E8F0" : "#F1F5F9"
                 border.color: "#CBD5E1"
                 radius: 6
             }
             contentItem: Text {
-                text: depCheckBtn.text
+                text: checkDependenciesBtn.text
                 color: "#475569"
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
@@ -86,21 +86,21 @@ Rectangle {
         }
 
         Button {
-            id: openOutputBtn
+            id: openOutputDirBtn
             text: "打开输出目录"
             Layout.fillWidth: true
             Layout.preferredHeight: 36
-            enabled: bridge && bridge.pipelineState === "completed"
+            enabled: root.bridge && root.bridge.pipelineState === "completed"
 
             background: Rectangle {
-                color: openOutputBtn.enabled
-                       ? (openOutputBtn.hovered ? "#4F46E5" : "#6366F1")
+                color: openOutputDirBtn.enabled
+                       ? (openOutputDirBtn.hovered ? "#4F46E5" : "#6366F1")
                        : "#CBD5E1"
                 radius: 6
             }
             contentItem: Text {
-                text: openOutputBtn.text
-                color: openOutputBtn.enabled ? "#FFFFFF" : "#94A3B8"
+                text: openOutputDirBtn.text
+                color: openOutputDirBtn.enabled ? "#FFFFFF" : "#94A3B8"
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -109,7 +109,7 @@ Rectangle {
     }
 
     Dialog {
-        id: depDialog
+        id: dependencyCheckDialog
         property string message: ""
         title: "环境依赖检查"
         modal: true
@@ -117,7 +117,7 @@ Rectangle {
         implicitWidth: 420
         implicitHeight: 300
         Label {
-            text: depDialog.message
+            text: dependencyCheckDialog.message
             color: "#1E293B"
             font.family: "monospace"
             font.pixelSize: 12

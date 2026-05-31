@@ -14,11 +14,10 @@ Rectangle {
 
     property var bridge: null
 
-    // 暴露给 ImportPanel 读取的设置值
-    property alias outputDir: outputDirField.text
-    property alias gpuEnabled: gpuSwitch.checked
-    property alias qualityChoice: qualityCombo.currentValue
-    property alias exportFormat: formatCombo.currentValue
+    property alias outputDir: outputDirectoryField.text
+    property alias gpuEnabled: gpuToggleSwitch.checked
+    property alias qualityChoice: qualityLevelCombo.currentValue
+    property alias exportFormat: exportFormatCombo.currentValue
 
     ColumnLayout {
         anchors.fill: parent
@@ -40,9 +39,9 @@ Rectangle {
                 font.pixelSize: 13
             }
             Switch {
-                id: gpuSwitch
+                id: gpuToggleSwitch
                 checked: true
-                enabled: bridge ? bridge.hardwareProfile.hasGPU : false
+                enabled: root.bridge ? root.bridge.hardwareProfile.hasGPU : false
             }
         }
 
@@ -52,7 +51,7 @@ Rectangle {
             font.pixelSize: 13
         }
         ComboBox {
-            id: qualityCombo
+            id: qualityLevelCombo
             Layout.fillWidth: true
             textRole: "text"
             valueRole: "value"
@@ -70,7 +69,7 @@ Rectangle {
             font.pixelSize: 13
         }
         ComboBox {
-            id: formatCombo
+            id: exportFormatCombo
             Layout.fillWidth: true
             textRole: "text"
             valueRole: "value"
@@ -91,7 +90,7 @@ Rectangle {
             spacing: 6
 
             TextField {
-                id: outputDirField
+                id: outputDirectoryField
                 Layout.fillWidth: true
                 placeholderText: "默认: ~/VideoTo3D_Projects"
                 color: "#1E293B"
@@ -100,25 +99,25 @@ Rectangle {
                     implicitHeight: 32
                     color: "#F1F5F9"
                     radius: 6
-                    border.color: outputDirField.activeFocus ? "#6366F1" : "#CBD5E1"
+                    border.color: outputDirectoryField.activeFocus ? "#6366F1" : "#CBD5E1"
                 }
             }
 
             Button {
-                id: browseDirBtn
+                id: browseOutputDirBtn
                 text: "..."
                 implicitWidth: 36
                 implicitHeight: 32
                 flat: false
-                onClicked: folderDialog.open()
+                onClicked: outputDirDialog.open()
 
                 background: Rectangle {
-                    color: browseDirBtn.hovered ? "#E2E8F0" : "#F1F5F9"
+                    color: browseOutputDirBtn.hovered ? "#E2E8F0" : "#F1F5F9"
                     border.color: "#CBD5E1"
                     radius: 6
                 }
                 contentItem: Text {
-                    text: browseDirBtn.text
+                    text: browseOutputDirBtn.text
                     color: "#475569"
                     font.weight: Font.Bold
                     font.pixelSize: 14
@@ -129,16 +128,16 @@ Rectangle {
         }
 
         FolderDialog {
-            id: folderDialog
+            id: outputDirDialog
             title: "选择输出目录"
-            currentFolder: outputDirField.text
-                ? "file://" + outputDirField.text
+            currentFolder: outputDirectoryField.text
+                ? "file://" + outputDirectoryField.text
                 : StandardPaths.writableLocation(StandardPaths.HomeLocation)
             onAccepted: {
                 let path = selectedFolder.toString()
                 if (path.startsWith("file://"))
                     path = path.substring(7)
-                outputDirField.text = path
+                outputDirectoryField.text = path
             }
         }
     }

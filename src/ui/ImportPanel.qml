@@ -33,16 +33,16 @@ Rectangle {
         }
 
         Rectangle {
-            id: dropArea
+            id: dropZone
             Layout.fillWidth: true
             Layout.preferredHeight: 100
-            color: dragHandler.containsDrag ? "#EEF2FF" : "#F8FAFC"
-            border.color: dragHandler.containsDrag ? "#6366F1" : "#CBD5E1"
-            border.width: dragHandler.containsDrag ? 2 : 1
+            color: fileDropArea.containsDrag ? "#EEF2FF" : "#F8FAFC"
+            border.color: fileDropArea.containsDrag ? "#6366F1" : "#CBD5E1"
+            border.width: fileDropArea.containsDrag ? 2 : 1
             radius: 8
 
             DropArea {
-                id: dragHandler
+                id: fileDropArea
                 anchors.fill: parent
                 onDropped: (drop) => {
                     if (drop.urls.length > 0) {
@@ -69,19 +69,19 @@ Rectangle {
         }
 
         Button {
-            id: browseBtn
+            id: fileBrowseBtn
             text: "选择文件..."
             Layout.fillWidth: true
             Layout.preferredHeight: 36
             flat: false
-            onClicked: fileDialog.open()
+            onClicked: fileBrowseDialog.open()
 
             background: Rectangle {
-                color: browseBtn.hovered ? "#4F46E5" : "#6366F1"
+                color: fileBrowseBtn.hovered ? "#4F46E5" : "#6366F1"
                 radius: 6
             }
             contentItem: Text {
-                text: browseBtn.text
+                text: fileBrowseBtn.text
                 color: "#FFFFFF"
                 font.pixelSize: 13
                 font.weight: Font.Medium
@@ -91,7 +91,7 @@ Rectangle {
         }
 
         FileDialog {
-            id: fileDialog
+            id: fileBrowseDialog
             title: "选择视频文件"
             nameFilters: ["视频文件 (*.mp4 *.mov *.avi *.mkv)"]
             onAccepted: {
@@ -106,29 +106,29 @@ Rectangle {
         Item { Layout.fillHeight: true }
 
         Button {
-            id: startBtn
+            id: startPipelineBtn
             text: bridge && bridge.pipelineState === "running" ? "处理中..." : "开始重建"
             Layout.fillWidth: true
             Layout.preferredHeight: 42
             enabled: bridge && bridge.pipelineState !== "running" && root.fileSelected
             onClicked: {
-                if (bridge && root.fileSelected) {
+                if (bridge && root.fileSelected && root.settingsPanel) {
                     bridge.startPipeline(root.selectedFilePath, {
-                        outputDir: settingsPanel.outputDir,
-                        gpuEnabled: settingsPanel.gpuEnabled,
-                        quality: settingsPanel.qualityChoice,
-                        exportFormat: settingsPanel.exportFormat
+                        outputDir: root.settingsPanel.outputDir,
+                        gpuEnabled: root.settingsPanel.gpuEnabled,
+                        quality: root.settingsPanel.qualityChoice,
+                        exportFormat: root.settingsPanel.exportFormat
                     })
                 }
             }
 
             background: Rectangle {
-                color: startBtn.enabled ? "#10B981" : "#CBD5E1"
+                color: startPipelineBtn.enabled ? "#10B981" : "#CBD5E1"
                 radius: 8
             }
             contentItem: Text {
-                text: startBtn.text
-                color: startBtn.enabled ? "#FFFFFF" : "#94A3B8"
+                text: startPipelineBtn.text
+                color: startPipelineBtn.enabled ? "#FFFFFF" : "#94A3B8"
                 font.pixelSize: 14
                 font.weight: Font.Bold
                 horizontalAlignment: Text.AlignHCenter

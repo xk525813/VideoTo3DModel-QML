@@ -7,6 +7,7 @@
 #include "../core/ExportManager.h"
 #include "../core/ProjectManager.h"
 #include "../core/LogManager.h"
+#include <QCoreApplication>
 #include <QProcess>
 #include <QDir>
 #include <QFileInfo>
@@ -62,21 +63,35 @@ void PipelineBridge::detectHardware() {
     emit hardwareProfileChanged();
 }
 
+QString PipelineBridge::resolveTool(const QString& name)
+{
+    // 优先查应用目录下的 tools/
+    QString bundled = QCoreApplication::applicationDirPath() + "/tools/" + name;
+    if (QFile::exists(bundled))
+        return bundled;
+    return name; // 回退到系统 PATH
+}
+
 QVariantMap PipelineBridge::checkDependencies() {
     QVariantMap deps;
-    auto check = [](const QString& cmd, const QStringList& args = {}) -> bool {
+    auto check = [](const QString& cmd, const QStringList& args = {}) -> QVariantMap {
+        QVariantMap info;
         QProcess p;
         p.start(cmd, args);
         p.waitForFinished(5000);
-        return p.exitCode() == 0 || p.error() == QProcess::Timedout;
+        info["available"] = p.exitCode() == 0 || p.error() == QProcess::Timedout;
+        info["path"] = cmd;
+        // 标记来源：内建(bundled) vs 系统(system)
+        info["bundled"] = cmd.contains("/tools/");
+        return info;
     };
 
-    deps["ffmpeg"] = check("ffmpeg", {"-version"});
-    deps["colmap"] = check("colmap", {"--help"});
-    deps["DensifyPointCloud"] = check("DensifyPointCloud", {"--help"});
-    deps["ReconstructMesh"] = check("ReconstructMesh", {"--help"});
-    deps["InterfaceCOLMAP"] = check("InterfaceCOLMAP", {"--help"});
-    deps["obj2gltf"] = check("obj2gltf", {"--help"});
+    deps["ffmpeg"]              = check(resolveTool("ffmpeg"),              {"-version"});
+    deps["colmap"]              = check(resolveTool("colmap"),              {"--help"});
+    deps["DensifyPointCloud"]   = check(resolveTool("DensifyPointCloud"),   {"--help"});
+    deps["ReconstructMesh"]     = check(resolveTool("ReconstructMesh"),     {"--help"});
+    deps["InterfaceCOLMAP"]     = check(resolveTool("InterfaceCOLMAP"),     {"--help"});
+    deps["obj2gltf"]            = check(resolveTool("obj2gltf"),            {"--help"});
 
     return deps;
 }
@@ -107,6 +122,17 @@ void PipelineBridge::startPipeline(const QString& videoPath,
     };
     config["exportFormat"] = settings.value("exportFormat", "glb").toString();
     config["projectDir"] = projectDir;
+
+    // 解析工具路径（优先 tools/ 内建）
+    QJsonObject toolPaths;
+    toolPaths["ffmpeg"]            = resolveTool("ffmpeg");
+    toolPaths["colmap"]            = resolveTool("colmap");
+    toolPaths["DensifyPointCloud"] = resolveTool("DensifyPointCloud");
+    toolPaths["ReconstructMesh"]   = resolveTool("ReconstructMesh");
+    toolPaths["InterfaceCOLMAP"]   = resolveTool("InterfaceCOLMAP");
+    toolPaths["RefineTexture"]     = resolveTool("RefineTexture");
+    toolPaths["obj2gltf"]          = resolveTool("obj2gltf");
+    config["tools"] = toolPaths;
 
     // 创建 worker (stages 在 worker 构造时自注册到 orchestrator)
     auto* worker = new PipelineWorker();

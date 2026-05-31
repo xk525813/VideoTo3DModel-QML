@@ -19,11 +19,15 @@ void MVSStage::reportProgress(double progress, const QString& status, int etaSec
               << std::endl;
 }
 
-StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir) {
+StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir,
+                                            const QJsonObject& tools) {
     reportProgress(0.05, "converting_colmap_to_mvs", 0);
 
     QString sfmDir = projectDir + "/sfm";
     QString meshDir = projectDir + "/mesh";
+
+    QString colmapPath = tools["colmap"].toString("colmap");
+    QString interfacePath = tools["InterfaceCOLMAP"].toString("InterfaceCOLMAP");
 
     // 查找 COLMAP 模型目录
     QDir sd(sfmDir);
@@ -42,7 +46,7 @@ StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir) {
 
     // colmap model_converter: .bin → .txt (OpenMVS 需要文本格式)
     QProcess converter;
-    converter.start("colmap", {
+    converter.start(colmapPath, {
         "model_converter",
         "--input_path", modelDir,
         "--output_path", meshDir,
@@ -58,7 +62,7 @@ StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir) {
 
     // colmap image_undistorter
     QProcess undistort;
-    undistort.start("colmap", {
+    undistort.start(colmapPath, {
         "image_undistorter",
         "--image_path", projectDir + "/frames",
         "--input_path", modelDir,
@@ -69,7 +73,7 @@ StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir) {
 
     // 生成 OpenMVS .mvs 文件: InterfaceCOLMAP
     QProcess interface;
-    interface.start("InterfaceCOLMAP", {
+    interface.start(interfacePath, {
         "-i", meshDir,
         "-o", meshDir + "/scene.mvs",
         "--image-folder", meshDir + "/undistorted/images"
@@ -87,8 +91,10 @@ StageResult MVSStage::convertCOLMAPtoMVS(const QString& projectDir) {
 
 StageResult MVSStage::execute(const QString& projectDir,
                                const QJsonObject& config) {
+    QJsonObject tools = config["tools"].toObject();
+
     // Step 1: 格式转换
-    StageResult convResult = convertCOLMAPtoMVS(projectDir);
+    StageResult convResult = convertCOLMAPtoMVS(projectDir, tools);
     if (!convResult.ok)
         return convResult;
 
@@ -96,11 +102,15 @@ StageResult MVSStage::execute(const QString& projectDir,
     QString sceneFile = meshDir + "/scene.mvs";
     int denseQuality = config["pipelineStrategy"].toObject()["denseQuality"].toInt(2);
 
+    QString densifyPath = tools["DensifyPointCloud"].toString("DensifyPointCloud");
+    QString reconstructPath = tools["ReconstructMesh"].toString("ReconstructMesh");
+    QString refinePath = tools["RefineTexture"].toString("RefineTexture");
+
     // Step 2: DensifyPointCloud
     reportProgress(0.3, "densifying_point_cloud", 0);
 
     QProcess densify;
-    densify.start("DensifyPointCloud", {
+    densify.start(densifyPath, {
         "--input-file", sceneFile,
         "--resolution-level", QString::number(denseQuality),
         "--number-views-fuse", QString::number(denseQuality == 3 ? 4 : 2)
@@ -117,7 +127,7 @@ StageResult MVSStage::execute(const QString& projectDir,
     reportProgress(0.7, "reconstructing_mesh", 0);
 
     QProcess reconstruct;
-    reconstruct.start("ReconstructMesh", {
+    reconstruct.start(reconstructPath, {
         "--input-file", meshDir + "/scene_dense.mvs",
         "--output-file", meshDir + "/model.obj"
     });
@@ -133,7 +143,7 @@ StageResult MVSStage::execute(const QString& projectDir,
     reportProgress(0.9, "refining_texture", 0);
 
     QProcess texture;
-    texture.start("RefineTexture", {
+    texture.start(refinePath, {
         "--input-file", meshDir + "/scene_dense_mesh.mvs",
         "--output-file", meshDir + "/model_textured.obj"
     });

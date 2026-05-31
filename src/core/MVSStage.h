@@ -12,7 +12,8 @@ public:
 
 private:
     /// 将 COLMAP 输出转换为 OpenMVS 输入格式
-    StageResult convertCOLMAPtoMVS(const QString& projectDir);
+    StageResult convertCOLMAPtoMVS(const QString& projectDir,
+                                    const QJsonObject& tools);
 
     static void reportProgress(double progress, const QString& status, int etaSeconds);
 };

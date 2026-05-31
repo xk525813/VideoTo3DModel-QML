@@ -61,10 +61,13 @@ Rectangle {
             flat: false
             onClicked: {
                 if (root.bridge) {
-                    let result = root.bridge.checkDependencies()
+                    let deps = root.bridge.checkDependencies()
                     let msg = ""
-                    for (let key in result) {
-                        msg += key + ": " + (result[key] ? "已安装" : "未安装") + "\n"
+                    for (let key in deps) {
+                        let info = deps[key]
+                        let status = info.available ? "已安装" : "未安装"
+                        let source = info.bundled ? "[内建]" : "[系统]"
+                        msg += key + ": " + status + " " + source + "\n"
                     }
                     dependencyCheckDialog.message = msg
                     dependencyCheckDialog.open()

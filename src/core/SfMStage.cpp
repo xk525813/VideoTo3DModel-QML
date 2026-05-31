@@ -26,12 +26,13 @@ StageResult SfMStage::execute(const QString& projectDir,
     QString dbPath = sfmDir + "/database.db";
 
     bool useGPU = config["pipelineStrategy"].toObject()["useGPU"].toBool(true);
+    QString colmapPath = config["tools"].toObject()["colmap"].toString("colmap");
 
     // Step 1: COLMAP feature_extractor
     reportProgress(0.1, "extracting_features", 0);
 
     QProcess extractor;
-    extractor.start("colmap", {
+    extractor.start(colmapPath, {
         "feature_extractor",
         "--database_path", dbPath,
         "--image_path", framesDir,
@@ -50,7 +51,7 @@ StageResult SfMStage::execute(const QString& projectDir,
     reportProgress(0.4, "matching_features", 0);
 
     QProcess matcher;
-    matcher.start("colmap", {
+    matcher.start(colmapPath, {
         "exhaustive_matcher",
         "--database_path", dbPath,
         "--SiftMatching.use_gpu", useGPU ? "1" : "0"
@@ -67,7 +68,7 @@ StageResult SfMStage::execute(const QString& projectDir,
     reportProgress(0.6, "running_sfm_reconstruction", 0);
 
     QProcess mapper;
-    mapper.start("colmap", {
+    mapper.start(colmapPath, {
         "mapper",
         "--database_path", dbPath,
         "--image_path", framesDir,

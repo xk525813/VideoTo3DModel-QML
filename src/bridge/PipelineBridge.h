@@ -50,6 +50,9 @@ public:
     QString stageStatus() const { return m_stageStatus; }
     int stageEta() const { return m_stageEta; }
 
+    /// 解析工具的路径：优先 tools/ 内建，再回退系统 PATH
+    Q_INVOKABLE static QString resolveTool(const QString& name);
+
     /// 检查 COLMAP/OpenMVS/FFmpeg 等必需工具是否可用
     Q_INVOKABLE QVariantMap checkDependencies();
 

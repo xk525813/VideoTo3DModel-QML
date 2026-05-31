@@ -29,10 +29,12 @@ StageResult ExportManager::execute(const QString& projectDir,
     if (!QFile::exists(diffuseTex))
         diffuseTex.clear();
 
+    QString obj2gltfPath = config["tools"].toObject()["obj2gltf"].toString("obj2gltf");
+
     if (format == "glb") {
-        return exportWithObj2gltf(objFile, diffuseTex, outputDir + "/model.glb", true);
+        return exportWithObj2gltf(obj2gltfPath, objFile, diffuseTex, outputDir + "/model.glb", true);
     } else if (format == "gltf") {
-        return exportWithObj2gltf(objFile, diffuseTex, outputDir + "/model.gltf", false);
+        return exportWithObj2gltf(obj2gltfPath, objFile, diffuseTex, outputDir + "/model.gltf", false);
     } else if (format == "obj") {
         // 直接复制
         QFile::copy(objFile, outputDir + "/model.obj");
@@ -50,7 +52,8 @@ StageResult ExportManager::execute(const QString& projectDir,
         QStringLiteral("不支持的导出格式: %1。支持: glb, gltf, obj").arg(format));
 }
 
-StageResult ExportManager::exportWithObj2gltf(const QString& objPath,
+StageResult ExportManager::exportWithObj2gltf(const QString& obj2gltfPath,
+                                               const QString& objPath,
                                                const QString& diffusePath,
                                                const QString& outputPath,
                                                bool binary) {
@@ -61,7 +64,7 @@ StageResult ExportManager::exportWithObj2gltf(const QString& objPath,
         args << "--texture" << diffusePath;
 
     QProcess obj2gltf;
-    obj2gltf.start("obj2gltf", args);
+    obj2gltf.start(obj2gltfPath, args);
     obj2gltf.waitForFinished(120000);
 
     if (obj2gltf.exitCode() != 0) {

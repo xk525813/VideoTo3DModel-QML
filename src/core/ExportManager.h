@@ -15,7 +15,8 @@ public:
     static QStringList availableFormats();
 
     /// 将 OBJ 模型 + 贴图通过 obj2gltf 转换为 GLB
-    static StageResult exportWithObj2gltf(const QString& objPath,
+    static StageResult exportWithObj2gltf(const QString& obj2gltfPath,
+                                          const QString& objPath,
                                           const QString& diffusePath,
                                           const QString& outputPath,
                                           bool binary);

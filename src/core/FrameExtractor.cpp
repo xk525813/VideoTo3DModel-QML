@@ -32,7 +32,8 @@ StageResult FrameExtractor::execute(const QString& projectDir,
 
     // 使用 FFmpeg 提取帧
     QProcess ffmpeg;
-    ffmpeg.start("ffmpeg", {
+    QString ffmpegPath = config["tools"].toObject()["ffmpeg"].toString("ffmpeg");
+    ffmpeg.start(ffmpegPath, {
         "-i", videoPath,
         "-vf", QString("scale='min(%1,iw)':'min(%1,ih)':force_original_aspect_ratio=decrease").arg(maxDim),
         "-qscale:v", "2",

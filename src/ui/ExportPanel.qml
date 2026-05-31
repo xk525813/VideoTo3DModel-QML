@@ -118,7 +118,23 @@ Rectangle {
         rightPadding: 24
         topPadding: 24
         bottomPadding: 16
-        standardButtons: Dialog.Ok
+
+        footer: DialogButtonBox {
+            alignment: Qt.AlignRight
+            background: Rectangle { color: "transparent" }
+            Button {
+                text: "确定"
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+                flat: false
+                implicitWidth: 80
+                implicitHeight: 34
+                background: Rectangle { color: "#6366F1"; radius: 6 }
+                contentItem: Text {
+                    text: parent.text; color: "#FFFFFF"; font.weight: Font.Medium
+                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
 
         background: Rectangle {
             radius: 12

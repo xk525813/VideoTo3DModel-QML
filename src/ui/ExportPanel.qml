@@ -111,16 +111,69 @@ Rectangle {
     Dialog {
         id: dependencyCheckDialog
         property string message: ""
-        title: "环境依赖检查"
+        title: ""
         modal: true
+        implicitWidth: 440
+        padding: 0
         standardButtons: Dialog.Ok
-        implicitWidth: 420
-        implicitHeight: 300
-        Label {
-            text: dependencyCheckDialog.message
-            color: "#1E293B"
-            font.family: "monospace"
-            font.pixelSize: 12
+
+        background: Rectangle {
+            radius: 12
+            color: "#FFFFFF"
+            border.color: "#C7D2FE"
+            border.width: 1
+
+            Rectangle {
+                width: 4
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 1
+                color: "#6366F1"
+                radius: 2
+            }
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+            topPadding: 24
+            bottomPadding: 16
+            leftPadding: 28
+            rightPadding: 24
+
+            RowLayout {
+                spacing: 10
+                Rectangle {
+                    width: 32; height: 32
+                    radius: 16
+                    color: "#E0E7FF"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "?"
+                        color: "#4F46E5"
+                        font.pixelSize: 16
+                        font.weight: Font.Bold
+                    }
+                }
+                Text {
+                    text: "环境依赖检查"
+                    color: "#312E81"
+                    font.pixelSize: 15
+                    font.weight: Font.Bold
+                }
+            }
+
+            ScrollView {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Math.min(implicitHeight, 260)
+                Text {
+                    text: dependencyCheckDialog.message
+                    color: "#374151"
+                    font.family: "monospace"
+                    font.pixelSize: 12
+                    lineHeight: 1.7
+                }
+            }
         }
     }
 }

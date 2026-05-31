@@ -120,12 +120,64 @@ ApplicationWindow {
         property string dialogMessage: ""
         title: pipelineErrorDialog.dialogTitle
         modal: true
+        implicitWidth: 460
+        padding: 0
         standardButtons: Dialog.Ok
-        implicitWidth: 420
-        Label {
-            text: pipelineErrorDialog.dialogMessage
-            wrapMode: Text.Wrap
-            color: "#1E293B"
+
+        background: Rectangle {
+            radius: 12
+            color: "#FFFFFF"
+            border.color: "#FECACA"
+            border.width: 1
+
+            Rectangle {
+                width: 4
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 1
+                color: "#EF4444"
+                radius: 2
+            }
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+            topPadding: 24
+            bottomPadding: 16
+            leftPadding: 28
+            rightPadding: 24
+
+            RowLayout {
+                spacing: 10
+                Rectangle {
+                    width: 32; height: 32
+                    radius: 16
+                    color: "#FEE2E2"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "✕"
+                        color: "#EF4444"
+                        font.pixelSize: 16
+                        font.weight: Font.Bold
+                    }
+                }
+                Text {
+                    text: pipelineErrorDialog.dialogTitle
+                    color: "#991B1B"
+                    font.pixelSize: 15
+                    font.weight: Font.Bold
+                }
+            }
+
+            Text {
+                text: pipelineErrorDialog.dialogMessage
+                wrapMode: Text.Wrap
+                color: "#374151"
+                font.pixelSize: 13
+                lineHeight: 1.5
+                Layout.fillWidth: true
+            }
         }
     }
 
@@ -133,14 +185,66 @@ ApplicationWindow {
         id: pipelineFinishDialog
         property bool success: false
         property string dialogMessage: ""
-        title: pipelineFinishDialog.success ? "完成" : "失败"
+        title: ""
         modal: true
+        implicitWidth: 440
+        padding: 0
         standardButtons: Dialog.Ok
-        implicitWidth: 380
-        Label {
-            text: pipelineFinishDialog.dialogMessage
-            wrapMode: Text.Wrap
-            color: "#1E293B"
+
+        background: Rectangle {
+            radius: 12
+            color: "#FFFFFF"
+            border.color: pipelineFinishDialog.success ? "#A7F3D0" : "#FECACA"
+            border.width: 1
+
+            Rectangle {
+                width: 4
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 1
+                color: pipelineFinishDialog.success ? "#10B981" : "#EF4444"
+                radius: 2
+            }
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+            topPadding: 24
+            bottomPadding: 16
+            leftPadding: 28
+            rightPadding: 24
+
+            RowLayout {
+                spacing: 10
+                Rectangle {
+                    width: 32; height: 32
+                    radius: 16
+                    color: pipelineFinishDialog.success ? "#D1FAE5" : "#FEE2E2"
+                    Text {
+                        anchors.centerIn: parent
+                        text: pipelineFinishDialog.success ? "✓" : "✕"
+                        color: pipelineFinishDialog.success ? "#059669" : "#EF4444"
+                        font.pixelSize: 16
+                        font.weight: Font.Bold
+                    }
+                }
+                Text {
+                    text: pipelineFinishDialog.success ? "处理完成" : "处理失败"
+                    color: pipelineFinishDialog.success ? "#065F46" : "#991B1B"
+                    font.pixelSize: 15
+                    font.weight: Font.Bold
+                }
+            }
+
+            Text {
+                text: pipelineFinishDialog.dialogMessage
+                wrapMode: Text.Wrap
+                color: "#374151"
+                font.pixelSize: 13
+                lineHeight: 1.5
+                Layout.fillWidth: true
+            }
         }
     }
 }

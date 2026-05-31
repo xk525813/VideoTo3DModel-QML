@@ -98,8 +98,11 @@ QVariantMap PipelineBridge::checkDependencies() {
 
 void PipelineBridge::startPipeline(const QString& videoPath,
                                     const QVariantMap& settings) {
-    // 创建项目目录
-    QString baseDir = settings.value("outputDir", QDir::homePath() + "/VideoTo3D_Projects").toString();
+    // 创建项目目录：用户指定目录优先，否则在运行目录的 projects/ 下
+    QString userDir = settings.value("outputDir").toString();
+    QString baseDir = userDir.isEmpty()
+        ? QDir::currentPath() + "/projects"
+        : userDir;
     QString projectName = "Project_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
     QString projectDir = ProjectManager::createProject(baseDir, projectName);
 

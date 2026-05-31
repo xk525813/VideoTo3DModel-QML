@@ -92,7 +92,7 @@ Rectangle {
             TextField {
                 id: outputDirectoryField
                 Layout.fillWidth: true
-                placeholderText: "默认: ~/VideoTo3D_Projects"
+                placeholderText: "默认: 运行目录/projects"
                 color: "#1E293B"
                 placeholderTextColor: "#94A3B8"
                 background: Rectangle {

@@ -36,6 +36,13 @@ void Application::init()
         return;
     }
 
+    // 设置内建工具库路径
+    QString toolsLibPath = QCoreApplication::applicationDirPath() + "/tools/libs";
+    if (QDir(toolsLibPath).exists()) {
+        QString ldPath = qEnvironmentVariable("LD_LIBRARY_PATH");
+        qputenv("LD_LIBRARY_PATH", (toolsLibPath + ":" + ldPath).toUtf8());
+    }
+
     // 初始化日志系统
     LogManager::init(QCoreApplication::applicationDirPath() + "/logs");
 

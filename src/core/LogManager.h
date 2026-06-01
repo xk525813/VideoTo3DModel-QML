@@ -30,6 +30,21 @@ public:
     template<typename... Args>
     static void critical(spdlog::source_loc loc, const char* fmt, Args&&... args);
 
+    // ── 格式字符串（无源码位置，简单调用用）─────────────────
+
+    template<typename... Args>
+    static void trace(const char* fmt, Args&&... args);
+    template<typename... Args>
+    static void debug(const char* fmt, Args&&... args);
+    template<typename... Args>
+    static void info (const char* fmt, Args&&... args);
+    template<typename... Args>
+    static void warn (const char* fmt, Args&&... args);
+    template<typename... Args>
+    static void error(const char* fmt, Args&&... args);
+    template<typename... Args>
+    static void critical(const char* fmt, Args&&... args);
+
     // ── 简单字符串（无源码位置）─────────────────────────────
 
     static void trace(const QString& msg);
@@ -72,4 +87,31 @@ void LogManager::error(spdlog::source_loc loc, const char* fmt, Args&&... args) 
 template<typename... Args>
 void LogManager::critical(spdlog::source_loc loc, const char* fmt, Args&&... args) {
     if (s_logger) s_logger->log(loc, spdlog::level::critical, fmt, std::forward<Args>(args)...);
+}
+
+// ─── 无源码位置的格式重载 ─────────────────────────
+
+template<typename... Args>
+void LogManager::trace(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->trace(fmt, std::forward<Args>(args)...);
+}
+template<typename... Args>
+void LogManager::debug(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->debug(fmt, std::forward<Args>(args)...);
+}
+template<typename... Args>
+void LogManager::info(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->info(fmt, std::forward<Args>(args)...);
+}
+template<typename... Args>
+void LogManager::warn(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->warn(fmt, std::forward<Args>(args)...);
+}
+template<typename... Args>
+void LogManager::error(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->error(fmt, std::forward<Args>(args)...);
+}
+template<typename... Args>
+void LogManager::critical(const char* fmt, Args&&... args) {
+    if (s_logger) s_logger->critical(fmt, std::forward<Args>(args)...);
 }

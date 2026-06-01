@@ -82,25 +82,22 @@ QString PipelineBridge::resolveTool(const QString& name)
 
 QVariantMap PipelineBridge::checkDependencies() {
     QVariantMap deps;
-    auto check = [](const QString& cmd, const QStringList& args = {}) -> QVariantMap {
+    auto check = [](const QString& cmd) -> QVariantMap {
         QVariantMap info;
-        QProcess p;
-        p.start(cmd, args);
-        p.waitForFinished(5000);
-        info["available"] = p.exitCode() == 0 || p.error() == QProcess::Timedout;
+        QFileInfo fi(cmd);
+        info["available"] = fi.exists() && fi.isExecutable();
         info["path"] = cmd;
-        // 标记来源：内建(bundled) vs 系统(system)
         info["bundled"] = cmd.contains("/tools/");
         return info;
     };
 
-    deps["ffmpeg"]              = check(resolveTool("ffmpeg"),              {"-version"});
-    deps["colmap"]              = check(resolveTool("colmap"),              {"--help"});
-    deps["DensifyPointCloud"]   = check(resolveTool("DensifyPointCloud"),   {"--help"});
-    deps["ReconstructMesh"]     = check(resolveTool("ReconstructMesh"),     {"--help"});
-    deps["InterfaceCOLMAP"]     = check(resolveTool("InterfaceCOLMAP"),     {"--help"});
-    deps["RefineMesh"]          = check(resolveTool("RefineMesh"),          {"--help"});
-    deps["obj2gltf"]            = check(resolveTool("obj2gltf"),            {"--help"});
+    deps["ffmpeg"]              = check(resolveTool("ffmpeg"));
+    deps["colmap"]              = check(resolveTool("colmap"));
+    deps["DensifyPointCloud"]   = check(resolveTool("DensifyPointCloud"));
+    deps["ReconstructMesh"]     = check(resolveTool("ReconstructMesh"));
+    deps["InterfaceCOLMAP"]     = check(resolveTool("InterfaceCOLMAP"));
+    deps["RefineMesh"]          = check(resolveTool("RefineMesh"));
+    deps["obj2gltf"]            = check(resolveTool("obj2gltf"));
 
     return deps;
 }

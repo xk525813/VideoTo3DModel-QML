@@ -91,6 +91,7 @@ QVariantMap PipelineBridge::checkDependencies() {
     deps["DensifyPointCloud"]   = check(resolveTool("DensifyPointCloud"),   {"--help"});
     deps["ReconstructMesh"]     = check(resolveTool("ReconstructMesh"),     {"--help"});
     deps["InterfaceCOLMAP"]     = check(resolveTool("InterfaceCOLMAP"),     {"--help"});
+    deps["RefineMesh"]          = check(resolveTool("RefineMesh"),          {"--help"});
     deps["obj2gltf"]            = check(resolveTool("obj2gltf"),            {"--help"});
 
     return deps;
@@ -133,7 +134,7 @@ void PipelineBridge::startPipeline(const QString& videoPath,
     toolPaths["DensifyPointCloud"] = resolveTool("DensifyPointCloud");
     toolPaths["ReconstructMesh"]   = resolveTool("ReconstructMesh");
     toolPaths["InterfaceCOLMAP"]   = resolveTool("InterfaceCOLMAP");
-    toolPaths["RefineTexture"]     = resolveTool("RefineTexture");
+    toolPaths["RefineMesh"]        = resolveTool("RefineMesh");
     toolPaths["obj2gltf"]          = resolveTool("obj2gltf");
     config["tools"] = toolPaths;
 

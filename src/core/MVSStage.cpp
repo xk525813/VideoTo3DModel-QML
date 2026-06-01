@@ -94,7 +94,7 @@ StageResult MVSStage::execute(const QString& projectDir,
 
     QString densifyPath = tools["DensifyPointCloud"].toString("DensifyPointCloud");
     QString reconstructPath = tools["ReconstructMesh"].toString("ReconstructMesh");
-    QString refinePath = tools["RefineTexture"].toString("RefineTexture");
+    QString refinePath = tools["RefineMesh"].toString("RefineMesh");
 
     // Step 2: DensifyPointCloud
     if (onProgress) onProgress(0.3, "densifying_point_cloud", 0);
@@ -129,7 +129,7 @@ StageResult MVSStage::execute(const QString& projectDir,
             .arg(QString(reconstruct.readAllStandardError())));
     }
 
-    // Step 4: RefineTexture (可选)
+    // Step 4: RefineMesh (可选)
     if (onProgress) onProgress(0.9, "refining_texture", 0);
 
     QProcess texture;
@@ -138,7 +138,7 @@ StageResult MVSStage::execute(const QString& projectDir,
         "--output-file", meshDir + "/model_textured.obj"
     });
     texture.waitForFinished(300000);
-    // RefineTexture 失败不阻塞，接受无纹理的模型
+    // RefineMesh 失败不阻塞，接受无纹理的模型
 
     if (onProgress) onProgress(1.0, "mvs_complete", 0);
     return StageResult::success();

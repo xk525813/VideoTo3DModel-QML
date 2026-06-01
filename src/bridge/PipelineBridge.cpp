@@ -65,10 +65,18 @@ void PipelineBridge::detectHardware() {
 
 QString PipelineBridge::resolveTool(const QString& name)
 {
-    // 优先查应用目录下的 tools/
-    QString bundled = QCoreApplication::applicationDirPath() + "/tools/" + name;
+    QString appDir = QCoreApplication::applicationDirPath();
+
+    // 部署模式: 工具在可执行文件同级的 tools/ 下
+    QString bundled = appDir + "/tools/" + name;
     if (QFile::exists(bundled))
         return bundled;
+
+    // 开发模式: 工具在项目根目录 tools/ 下 (exe 在 build/src/)
+    bundled = appDir + "/../../../tools/" + name;
+    if (QFile::exists(bundled))
+        return bundled;
+
     return name; // 回退到系统 PATH
 }
 

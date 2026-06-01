@@ -68,12 +68,12 @@ QString PipelineBridge::resolveTool(const QString& name)
     QString appDir = QCoreApplication::applicationDirPath();
 
     // 部署模式: 工具在可执行文件同级的 tools/ 下
-    QString bundled = appDir + "/tools/" + name;
+    QString bundled = QDir::cleanPath(appDir + "/tools/" + name);
     if (QFile::exists(bundled))
         return bundled;
 
     // 开发模式: 工具在项目根目录 tools/ 下 (exe 在 build/src/)
-    bundled = appDir + "/../../../tools/" + name;
+    bundled = QDir::cleanPath(appDir + "/../../tools/" + name);
     if (QFile::exists(bundled))
         return bundled;
 

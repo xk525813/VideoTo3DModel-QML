@@ -97,7 +97,7 @@ Rectangle {
                 id: outputDirectoryField
                 Layout.fillWidth: true
                 enabled: !root.isRunning
-                readonly: !root.isRunning
+                readOnly: root.isRunning
                 placeholderText: "默认: 运行目录/projects"
                 color: "#1E293B"
                 placeholderTextColor: "#94A3B8"
